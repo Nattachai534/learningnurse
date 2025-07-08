@@ -1,0 +1,1444 @@
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (tabName === 'data') {
+                loadDataWithRetry();
+                loadStatsWithRetry();
+            } else if (tabName === 'dashboard') {
+                loadDashboardData();
+            }
+        }<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบข้อมูลการศึกษาทางการพยาบาล</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #e91e63;
+            --primary-light: #f8bbd9;
+            --primary-dark: #ad1457;
+            --secondary-color: #3f51b5;
+            --accent-color: #ff4081;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --surface-color: rgba(255, 255, 255, 0.95);
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+            --border-radius: 16px;
+            --border-radius-small: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: var(--background-gradient);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .background-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            right: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            left: 5%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 15%;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-medium);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(233, 30, 99, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .logo img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-content {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-family: 'Kanit', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: none;
+        }
+
+        .header p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .header .subtitle {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-container {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-medium);
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: 2px solid transparent;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--border-radius-small);
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(233, 30, 99, 0.1), transparent);
+            transition: var(--transition);
+        }
+
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+            border-color: var(--primary-light);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-tab i {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .nav-tab.active i {
+            opacity: 1;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--border-radius-small);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .form-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius-small);
+            background: white;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius-small);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radio-item:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .radio-item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+        }
+
+        .radio-item label {
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .radio-item:has(input[type="radio"]:checked) {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .course-section {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--border-radius-small);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 2px dashed var(--primary-light);
+            transition: var(--transition);
+        }
+
+        .course-section.show {
+            border-style: solid;
+            background: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius-small);
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #388e3c);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #f57c00);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error-color), #d32f2f);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .course-item {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius-small);
+            border: 1px solid var(--primary-light);
+            align-items: end;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-color);
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--primary-light);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-medium);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-header h2 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--border-radius-small);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-primary);
+            min-width: 200px;
+        }
+
+        .table-content {
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--text-primary);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table tr:hover {
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .department-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination .btn {
+            min-width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination .btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2% auto;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-heavy);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .modal-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius-small);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: var(--shadow-medium);
+            backdrop-filter: blur(20px);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border: 1px solid var(--error-color);
+            color: #c62828;
+            padding: 1rem;
+            border-radius: var(--border-radius-small);
+            margin: 1rem 0;
+            text-align: center;
+            border-left: 4px solid var(--error-color);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border: 1px solid var(--success-color);
+            color: #2e7d32;
+            padding: 1rem;
+            border-radius: var(--border-radius-small);
+            margin: 1rem 0;
+            text-align: center;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .name-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius-small);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .name-suggestion-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .name-suggestion-item:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container { padding: 0.5rem; }
+            .header-content { padding: 1.5rem; }
+            .nav-tabs { grid-template-columns: repeat(2, 1fr); }
+            .card { padding: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .radio-group { grid-template-columns: 1fr; }
+            .course-item { grid-template-columns: 1fr; gap: 0.75rem; }
+            .search-controls { flex-direction: column; width: 100%; }
+            .search-input { width: 100%; min-width: auto; }
+            .data-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+            .stat-number { font-size: 2rem; }
+            .table-header { flex-direction: column; text-align: center; }
+            .data-table { font-size: 0.8rem; }
+            .data-table th, .data-table td { padding: 0.5rem 0.25rem; }
+            .action-buttons { flex-direction: column; }
+            .modal-content { width: 95%; margin: 5% auto; }
+            .modal-body { padding: 1rem; }
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .logo-container { flex-direction: column; gap: 1rem; }
+            .nav-tabs { grid-template-columns: 1fr; }
+            .form-input, .form-select, .form-textarea { font-size: 16px; }
+            .btn { padding: 0.875rem 1.25rem; font-size: 0.9rem; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .p-1 { padding: 0.5rem; }
+        .p-2 { padding: 1rem; }
+        .p-3 { padding: 1.5rem; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        .text-primary { color: var(--primary-color); }
+        .text-secondary { color: var(--text-secondary); }
+        .bg-white { background: white; }
+        .rounded { border-radius: var(--border-radius-small); }
+        .shadow { box-shadow: var(--shadow-light); }
+        .transition { transition: var(--transition); }
+
+        .animate-bounce { animation: bounce 2s infinite; }
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+            40%, 43% { transform: translate3d(0,-30px,0); }
+            70% { transform: translate3d(0,-15px,0); }
+            90% { transform: translate3d(0,-4px,0); }
+        }
+
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+
+        .animate-fadeIn { animation: fadeInUp 0.6s ease-out; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-decoration">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <div class="main-container">
+        <div class="container">
+            <!-- Header Section -->
+            <header class="header animate-fadeIn">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="https://img2.pic.in.th/pic/Picture2-19f0391a0702ff1ee.png" alt="โลโก้โรงพยาบาลราชวิถี">
+                    </div>
+                </div>
+                <div class="header-content">
+                    <h1>ระบบข้อมูลการศึกษาทางการพยาบาล</h1>
+                    <p class="subtitle">เฉพาะพยาบาลวิชาชีพ</p>
+                    <p>งานถ่ายทอดการพยาบาล กลุ่มงานวิชาการพยาบาล</p>
+                    <p>ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี</p>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="nav-container animate-fadeIn">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" onclick="showTab('form')">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>กรอกข้อมูลการศึกษา</span>
+                    </button>
+                    <button class="nav-tab" onclick="showTab('data')">
+                        <i class="fas fa-database"></i>
+                        <span>จัดการข้อมูล</span>
+                    </button>
+                    <button class="nav-tab" onclick="showTab('dashboard')">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="nav-tab" onclick="showTab('search')">
+                        <i class="fas fa-search"></i>
+                        <span>ค้นหาข้อมูล</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Form Tab -->
+            <div id="form" class="tab-content active">
+                <div class="card animate-fadeIn">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-edit"></i>
+                            แบบฟอร์มกรอกข้อมูลการศึกษา
+                        </h2>
+                    </div>
+
+                    <form id="educationForm">
+                        <!-- ข้อมูลส่วนบุคคล -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <i class="fas fa-user"></i>
+                                ข้อมูลส่วนบุคคล
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="prefix">คำนำหน้า *</label>
+                                    <div class="input-container">
+                                        <select class="form-select" id="prefix" name="prefix" required>
+                                            <option value="">เลือกคำนำหน้า</option>
+                                            <option value="นาย">นาย</option>
+                                            <option value="นาง">นาง</option>
+                                            <option value="นางสาว">นางสาว</option>
+                                            <option value="ดร.">ดร.</option>
+                                            <option value="ผศ.ดร.">ผศ.ดร.</option>
+                                            <option value="รศ.ดร.">รศ.ดร.</option>
+                                            <option value="ศ.ดร.">ศ.ดร.</option>
+                                            <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
+                                        </select>
+                                        <input class="form-input mt-1 hidden" id="prefixOther" name="prefixOther" placeholder="กรอกคำนำหน้าอื่นๆ">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="firstName">ชื่อ *</label>
+                                    <div class="input-container">
+                                        <input class="form-input" type="text" id="firstName" name="firstName" placeholder="กรอกชื่อ" required>
+                                        <div class="name-suggestions" id="firstNameSuggestions"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="lastName">นามสกุล *</label>
+                                    <div class="input-container">
+                                        <input class="form-input" type="text" id="lastName" name="lastName" placeholder="กรอกนามสกุล" required>
+                                        <div class="name-suggestions" id="lastNameSuggestions"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="position">ตำแหน่ง *</label>
+                                    <div class="input-container">
+                                        <select class="form-select" id="position" name="position" required>
+                                            <option value="">เลือกตำแหน่ง</option>
+                                            <option value="พยาบาลวิชาชีพ">พยาบาลวิชาชีพ</option>
+                                            <option value="พยาบาลเทคนิค">พยาบาลเทคนิค</option>
+                                            <option value="นักวิชาการสาธารณสุข">นักวิชาการสาธารณสุข</option>
+                                            <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
+                                        </select>
+                                        <input class="form-input mt-1 hidden" id="positionOther" name="positionOther" placeholder="กรอกตำแหน่งอื่นๆ">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="level">ระดับ *</label>
+                                    <div class="input-container">
+                                        <select class="form-select" id="level" name="level" required>
+                                            <option value="">เลือกระดับ</option>
+                                            <option value="ไม่มี">ไม่มี</option>
+                                            <option value="ปฏิบัติการ">ปฏิบัติการ</option>
+                                            <option value="ชำนาญการ">ชำนาญการ</option>
+                                            <option value="ชำนาญการพิเศษ">ชำนาญการพิเศษ</option>
+                                            <option value="เชี่ยวชาญ">เชี่ยวชาญ</option>
+                                            <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
+                                        </select>
+                                        <input class="form-input mt-1 hidden" id="levelOther" name="levelOther" placeholder="กรอกระดับอื่นๆ">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="department">หน่วยงาน</label>
+                                    <input class="form-input" type="text" id="department" name="department" placeholder="หน่วยงาน (จะถูกกรอกอัตโนมัติ)" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="work">งาน</label>
+                                    <input class="form-input" type="text" id="work" name="work" placeholder="งาน (จะถูกกรอกอัตโนมัติ)" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="workGroup">กลุ่มงาน</label>
+                                    <input class="form-input" type="text" id="workGroup" name="workGroup" placeholder="กลุ่มงาน (จะถูกกรอกอัตโนมัติ)" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="birthDate">วันเดือนปี เกิด *</label>
+                                    <input class="form-input" type="date" id="birthDate" name="birthDate" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="retirementDate">วันเดือนปี เกษียณอายุ</label>
+                                    <input class="form-input" type="text" id="retirementDate" name="retirementDate" placeholder="จะคำนวณอัตโนมัติจากวันเกิด" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="licenseNumber">เลขที่ใบอนุญาตประกอบวิชาชีพ *</label>
+                                    <input class="form-input" type="text" id="licenseNumber" name="licenseNumber" placeholder="กรอกเลขที่ใบอนุญาต" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- หลักสูตรการพยาบาลเฉพาะทาง -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <i class="fas fa-graduation-cap"></i>
+                                หลักสูตรการพยาบาลเฉพาะทาง *
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-item" onclick="selectRadio('hasSpecializedYes')">
+                                    <input type="radio" id="hasSpecializedYes" name="hasSpecializedCourse" value="เรียน" onchange="toggleSpecializedCourse()">
+                                    <label for="hasSpecializedYes">เรียน</label>
+                                </div>
+                                <div class="radio-item" onclick="selectRadio('hasSpecializedNo')">
+                                    <input type="radio" id="hasSpecializedNo" name="hasSpecializedCourse" value="ไม่ได้เรียน" onchange="toggleSpecializedCourse()">
+                                    <label for="hasSpecializedNo">ไม่ได้เรียน</label>
+                                </div>
+                            </div>
+
+                            <div id="specializedCourseSection" class="course-section hidden">
+                                <div class="course-header">
+                                    <h3 class="course-title">
+                                        <i class="fas fa-list"></i>
+                                        รายละเอียดหลักสูตรการพยาบาลเฉพาะทาง
+                                    </h3>
+                                    <button type="button" class="btn btn-primary btn-icon" onclick="addSpecializedCourse()" title="เพิ่มหลักสูตร">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div id="specializedCourseList">
+                                    <div class="course-item">
+                                        <div class="form-group">
+                                            <label class="form-label">ชื่อหลักสูตร</label>
+                                            <input class="form-input" type="text" name="specializedCourseName[]" placeholder="กรอกชื่อหลักสูตร">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">สถาบัน</label>
+                                            <input class="form-input" type="text" name="specializedInstitution[]" placeholder="กรอกชื่อสถาบัน">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ปีที่จบ</label>
+                                            <input class="form-input" type="text" name="specializedGraduationYear[]" placeholder="กรอกปีที่จบ">
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-icon hidden" onclick="removeSpecializedCourse(this)" title="ลบหลักสูตร">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- หลักสูตร Preceptor -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                หลักสูตร Preceptor *
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-item" onclick="selectRadio('hasPreceptorYes')">
+                                    <input type="radio" id="hasPreceptorYes" name="hasPreceptorCourse" value="เรียน" onchange="togglePreceptorCourse()">
+                                    <label for="hasPreceptorYes">เรียน</label>
+                                </div>
+                                <div class="radio-item" onclick="selectRadio('hasPreceptorNo')">
+                                    <input type="radio" id="hasPreceptorNo" name="hasPreceptorCourse" value="ไม่ได้เรียน" onchange="togglePreceptorCourse()">
+                                    <label for="hasPreceptorNo">ไม่ได้เรียน</label>
+                                </div>
+                            </div>
+
+                            <div id="preceptorCourseSection" class="course-section hidden">
+                                <div class="course-header">
+                                    <h3 class="course-title">
+                                        <i class="fas fa-list"></i>
+                                        รายละเอียดหลักสูตร Preceptor
+                                    </h3>
+                                    <button type="button" class="btn btn-primary btn-icon" onclick="addPreceptorCourse()" title="เพิ่มหลักสูตร">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div id="preceptorCourseList">
+                                    <div class="course-item">
+                                        <div class="form-group">
+                                            <label class="form-label">ระยะเวลาเรียน</label>
+                                            <input class="form-input" type="text" name="preceptorDuration[]" placeholder="เช่น 40 ชั่วโมง">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ปีที่จบ</label>
+                                            <input class="form-input" type="text" name="preceptorGraduationYear[]" placeholder="กรอกปีที่จบ">
+                                        </div>
+                                        <div class="form-group"></div>
+                                        <button type="button" class="btn btn-danger btn-icon hidden" onclick="removePreceptorCourse(this)" title="ลบหลักสูตร">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- หลักสูตรปริญญาโท -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <i class="fas fa-user-graduate"></i>
+                                หลักสูตรปริญญาโท *
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-item" onclick="selectRadio('hasMastersYes')">
+                                    <input type="radio" id="hasMastersYes" name="hasMastersDegree" value="เรียน" onchange="toggleMastersDegree()">
+                                    <label for="hasMastersYes">เรียน</label>
+                                </div>
+                                <div class="radio-item" onclick="selectRadio('hasMastersNo')">
+                                    <input type="radio" id="hasMastersNo" name="hasMastersDegree" value="ไม่ได้เรียน" onchange="toggleMastersDegree()">
+                                    <label for="hasMastersNo">ไม่ได้เรียน</label>
+                                </div>
+                            </div>
+
+                            <div id="mastersDegreeSection" class="course-section hidden">
+                                <div class="course-header">
+                                    <h3 class="course-title">
+                                        <i class="fas fa-list"></i>
+                                        รายละเอียดหลักสูตรปริญญาโท
+                                    </h3>
+                                    <button type="button" class="btn btn-primary btn-icon" onclick="addMastersDegree()" title="เพิ่มสาขา">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div id="mastersDegreeList">
+                                    <div class="course-item">
+                                        <div class="form-group">
+                                            <label class="form-label">สาขา</label>
+                                            <input class="form-input" type="text" name="mastersMajor[]" placeholder="กรอกสาขาวิชา">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">สถาบัน</label>
+                                            <input class="form-input" type="text" name="mastersInstitution[]" placeholder="กรอกชื่อสถาบัน">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ปีที่จบ</label>
+                                            <input class="form-input" type="text" name="mastersGraduationYear[]" placeholder="กรอกปีที่จบ">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ทุนการศึกษา</label>
+                                            <select class="form-select" name="mastersScholarship[]">
+                                                <option value="">เลือกทุนการศึกษา</option>
+                                                <option value="ทุนกรม">ทุนกรม</option>
+                                                <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-icon hidden" onclick="removeMastersDegree(this)" title="ลบสาขา">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- หลักสูตรปริญญาเอก -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <i class="fas fa-award"></i>
+                                หลักสูตรปริญญาเอก *
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-item" onclick="selectRadio('hasDoctoralYes')">
+                                    <input type="radio" id="hasDoctoralYes" name="hasDoctoralDegree" value="เรียน" onchange="toggleDoctoralDegree()">
+                                    <label for="hasDoctoralYes">เรียน</label>
+                                </div>
+                                <div class="radio-item" onclick="selectRadio('hasDoctoralNo')">
+                                    <input type="radio" id="hasDoctoralNo" name="hasDoctoralDegree" value="ไม่ได้เรียน" onchange="toggleDoctoralDegree()">
+                                    <label for="hasDoctoralNo">ไม่ได้เรียน</label>
+                                </div>
+                            </div>
+
+                            <div id="doctoralDegreeSection" class="course-section hidden">
+                                <div class="course-header">
+                                    <h3 class="course-title">
+                                        <i class="fas fa-list"></i>
+                                        รายละเอียดหลักสูตรปริญญาเอก
+                                    </h3>
+                                    <button type="button" class="btn btn-primary btn-icon" onclick="addDoctoralDegree()" title="เพิ่มสาขา">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div id="doctoralDegreeList">
+                                    <div class="course-item">
+                                        <div class="form-group">
+                                            <label class="form-label">สาขา</label>
+                                            <input class="form-input" type="text" name="doctoralMajor[]" placeholder="กรอกสาขาวิชา">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">สถาบัน</label>
+                                            <input class="form-input" type="text" name="doctoralInstitution[]" placeholder="กรอกชื่อสถาบัน">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ปีที่จบ</label>
+                                            <input class="form-input" type="text" name="doctoralGraduationYear[]" placeholder="กรอกปีที่จบ">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ทุนการศึกษา</label>
+                                            <select class="form-select" name="doctoralScholarship[]">
+                                                <option value="">เลือกทุนการศึกษา</option>
+                                                <option value="ทุนกรม">ทุนกรม</option>
+                                                <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-icon hidden" onclick="removeDoctoralDegree(this)" title="ลบสาขา">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-save"></i>
+                                บันทึกข้อมูลการศึกษา
+                            </button>
+                        </div>
+
+                        <div class="loading" id="loading">
+                            <div class="spinner"></div>
+                            <p class="mt-2">กำลังบันทึกข้อมูล...</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Data Management Tab -->
+            <div id="data" class="tab-content">
+                <div class="card animate-fadeIn">
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h2><i class="fas fa-database"></i> จัดการข้อมูลการศึกษา</h2>
+                            <div class="search-controls">
+                                <input type="text" class="search-input" id="searchBox" placeholder="ค้นหาชื่อ, ตำแหน่ง, หน่วยงาน...">
+                                <select class="form-select" id="sortFilter" onchange="handleSort()" style="min-width: 150px;">
+                                    <option value="">เรียงลำดับ</option>
+                                    <option value="firstName-asc">ชื่อ (ก-ฮ)</option>
+                                    <option value="firstName-desc">ชื่อ (ฮ-ก)</option>
+                                    <option value="lastName-asc">นามสกุล (ก-ฮ)</option>
+                                    <option value="lastName-desc">นามสกุล (ฮ-ก)</option>
+                                </select>
+                                <button class="btn btn-success" onclick="exportData('pdf')">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </button>
+                                <button class="btn btn-warning" onclick="exportData('csv')">
+                                    <i class="fas fa-file-csv"></i> CSV
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-content">
+                            <div class="data-grid" id="statsGrid">
+                                <!-- Stats cards will be populated here -->
+                            </div>
+
+                            <div id="dataErrorMessage" class="error-message hidden">
+                                <div><i class="fas fa-exclamation-triangle"></i> ไม่สามารถโหลดข้อมูลได้</div>
+                                <div>กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต</div>
+                                <button class="btn btn-primary mt-2" onclick="retryLoadData()">
+                                    <i class="fas fa-sync
