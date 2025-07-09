@@ -461,7 +461,7 @@
         // CONFIGURATION
         // ===================================================================================
         // !!! สำคัญมาก !!!
-        // ให้นำ URL ที่ได้จากการ Deploy ใหม่ มาวางที่นี่
+        // ให้นำ URL ที่ได้จากการ Deploy ใหม่ (ด้วย Code.gs ฉบับ JSONP) มาวางที่นี่
         const API_URL = 'https://script.google.com/macros/s/AKfycbwgiUYsYKrjXgU8Vj3UjczIvLhq60NS5iL12GLX4u_609PL3mZSdHSBRO2rxjsabWdcTA/exec';
         // !!! สำคัญมาก !!!
 
@@ -500,37 +500,59 @@
             document.getElementById('searchType').addEventListener('change', toggleSearchFields);
         }
 
-        async function callAPI(action, payload = {}, method = 'POST') {
+        /**
+         * ===================================================================================
+         * ฟังก์ชัน callAPI ฉบับแก้ไขใหม่ - ใช้เทคนิค JSONP เพื่อ Bypass CORS
+         * ===================================================================================
+         */
+        function callAPI(action, payload = {}) {
             showLoading(true);
-            try {
-                // สำหรับ POST request เราจะส่งข้อมูลใน body
-                const response = await fetch(API_URL, {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action, ...payload }),
-                    mode: 'cors'
-                });
 
-                if (!response.ok) {
-                   throw new Error(`Network response was not ok. Status: ${response.status} ${response.statusText}`);
-                }
+            return new Promise((resolve, reject) => {
+                // 1. สร้างชื่อ callback function ที่ไม่ซ้ำกัน
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
                 
-                const result = await response.json();
-                if (result && result.success === false) { // Check for success:false explicitly
-                    throw new Error(result.error || 'An unknown API error occurred.');
-                }
-                return result;
-            } catch (error) {
-                console.error('API Error:', error);
-                showMessage('API Error', error.message, 'error');
-                // อัปเดตสถานะการเชื่อมต่อเมื่อเกิด Error
-                const statusEl = document.getElementById('connectionStatus');
-                statusEl.textContent = `การเชื่อมต่อล้มเหลว (CORS Error)`;
-                statusEl.style.color = 'var(--error-color)';
-                return null;
-            } finally {
-                showLoading(false);
-            }
+                // 2. สร้างฟังก์ชันนี้ไว้ใน global scope (window) เพื่อให้ script ที่โหลดมาเรียกใช้ได้
+                window[callbackName] = function(data) {
+                    // 4. เมื่อ script ถูกโหลดและเรียก callback นี้แล้ว:
+                    delete window[callbackName]; // ลบ callback function ทิ้ง
+                    document.body.removeChild(script); // ลบ tag <script> ทิ้ง
+                    showLoading(false);
+                    
+                    if (data && data.success) {
+                        resolve(data); // ส่งข้อมูลกลับไปตามปกติ
+                    } else {
+                        const errorMessage = (data && data.error) ? data.error : 'An unknown error occurred.';
+                        console.error('API Error (JSONP):', errorMessage);
+                        showMessage('API Error', errorMessage, 'error');
+                        resolve(null); // ส่งค่า null กลับไป เพื่อให้ Promise chain ทำงานต่อได้ไม่สะดุด
+                    }
+                };
+
+                // 3. สร้าง tag <script> ขึ้นมาแบบไดนามิก
+                const script = document.createElement('script');
+                const fullPayload = { action, ...payload };
+                // เข้ารหัสข้อมูลทั้งหมดให้อยู่ในรูปแบบที่ปลอดภัยสำหรับ URL
+                const queryString = `?callback=${callbackName}&payload=${encodeURIComponent(JSON.stringify(fullPayload))}`;
+                
+                script.src = API_URL + queryString;
+                
+                script.onerror = function() {
+                    // กรณีที่โหลด script ไม่สำเร็จ (เช่น Network error, URL ผิด)
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    showLoading(false);
+                    const errorMsg = 'การเชื่อมต่อกับเซิร์ฟเวอร์ล้มเหลว (JSONP Error)';
+                    showMessage('Connection Error', errorMsg, 'error');
+                    const statusEl = document.getElementById('connectionStatus');
+                    statusEl.textContent = 'การเชื่อมต่อล้มเหลว!';
+                    statusEl.style.color = 'var(--error-color)';
+                    reject(new Error(errorMsg));
+                };
+                
+                // นำ tag <script> ที่สร้างขึ้นไปแปะในหน้าเว็บ เพื่อให้เบราว์เซอร์เริ่มโหลด
+                document.body.appendChild(script);
+            });
         }
 
         function showLoading(show) { document.getElementById('loadingOverlay').classList.toggle('hidden', !show); }
@@ -557,7 +579,7 @@
             const statusEl = document.getElementById('connectionStatus');
             statusEl.textContent = 'กำลังตรวจสอบ...';
             statusEl.style.color = 'var(--text-secondary)';
-            const result = await callAPI('test', {}, 'POST'); // Use POST for testing
+            const result = await callAPI('test');
             if (result && result.success) {
                 statusEl.textContent = 'เชื่อมต่อสำเร็จ';
                 statusEl.style.color = 'var(--success-color)';
@@ -565,7 +587,7 @@
         }
         
         async function loadDatabaseNames() {
-            const result = await callAPI('getDatabaseNames', {}, 'POST');
+            const result = await callAPI('getDatabaseNames');
             if (result && result.data) {
                 state.databaseNames = result.data;
             }
@@ -890,7 +912,7 @@
         }
 
         async function loadViewData() {
-            const result = await callAPI('read', {}, 'POST');
+            const result = await callAPI('read');
             if (result && result.data) {
                 state.allRecords = result.data;
                 filterAndDisplayData();
@@ -1067,7 +1089,7 @@
         
         async function exportData(format) {
             showMessage('กำลังเตรียมไฟล์', `กำลังสร้างไฟล์ ${format.toUpperCase()}...`, 'info');
-            const result = await callAPI('exportData', { format }, 'POST');
+            const result = await callAPI('exportData', { format });
             if (result && result.downloadUrl) {
                 window.open(result.downloadUrl, '_blank');
             }
@@ -1075,7 +1097,7 @@
         
         async function setupDashboard() {
             const year = document.getElementById('dashboardYearSelect').value;
-            const result = await callAPI('getDashboardData', { retirementYear: year }, 'POST');
+            const result = await callAPI('getDashboardData', { retirementYear: year });
             if (result && result.data) renderDashboard(result.data, year);
         }
         
@@ -1130,7 +1152,7 @@
             const term = document.getElementById('searchTerm').value;
             const year = document.getElementById('searchYear').value;
             
-            const result = await callAPI('search', { type, term, year }, 'POST');
+            const result = await callAPI('search', { type, term, year });
             const container = document.getElementById('searchResults');
             if (result && result.data.length > 0) {
                 container.innerHTML = `<p style="margin-bottom: 1rem;">พบ ${result.data.length} รายการ</p>
