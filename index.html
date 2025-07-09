@@ -648,15 +648,28 @@
             cursor: pointer;
             transition: var(--transition);
             border-bottom: 1px solid #f0f0f0;
+            position: relative;
         }
 
-        .name-suggestion-item:hover {
+        .name-suggestion-item:hover,
+        .name-suggestion-item.active {
             background: var(--primary-light);
             color: var(--primary-dark);
+            transform: translateX(5px);
         }
 
         .name-suggestion-item:last-child {
             border-bottom: none;
+        }
+
+        .name-suggestion-item:hover::before,
+        .name-suggestion-item.active::before {
+            content: '👤';
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
         }
 
         .mt-1 {
@@ -2149,19 +2162,57 @@
             });
         }
 
-        // Placeholder functions
-        function displayData() { console.log('Display data called'); }
-        function previousPage() { console.log('Previous page called'); }
-        function nextPage() { console.log('Next page called'); }
-        function showDetail(id) { console.log('Show detail called for ID:', id); }
-        function requestEdit(id) { console.log('Request edit called for ID:', id); }
-        function deleteRecord(id) { console.log('Delete record called for ID:', id); }
-        function exportData(format) { console.log('Export data called with format:', format); }
-        function toggleSearchFields() { console.log('Toggle search fields called'); }
-        function performSearch() { console.log('Perform search called'); }
-        function closeDetailModal() { console.log('Close detail modal called'); }
-        function closeEditAccessModal() { console.log('Close edit access modal called'); }
-        function validateEditAccess() { console.log('Validate edit access called'); }
+        // Keyboard navigation for suggestions
+        function handleKeyboardNavigation(e, inputElement) {
+            const suggestionsContainer = inputElement.nextElementSibling;
+            if (!suggestionsContainer || suggestionsContainer.style.display === 'none') return;
+            
+            const suggestions = suggestionsContainer.querySelectorAll('.name-suggestion-item');
+            let currentActive = suggestionsContainer.querySelector('.active');
+            let activeIndex = -1;
+            
+            // หา index ของ item ที่ active อยู่
+            if (currentActive) {
+                activeIndex = Array.from(suggestions).indexOf(currentActive);
+            }
+            
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    activeIndex = activeIndex < suggestions.length - 1 ? activeIndex + 1 : 0;
+                    updateActiveItem(suggestions, activeIndex);
+                    break;
+                    
+                case 'ArrowUp':
+                    e.preventDefault();
+                    activeIndex = activeIndex > 0 ? activeIndex - 1 : suggestions.length - 1;
+                    updateActiveItem(suggestions, activeIndex);
+                    break;
+                    
+                case 'Enter':
+                    e.preventDefault();
+                    if (currentActive) {
+                        currentActive.click();
+                    }
+                    break;
+                    
+                case 'Escape':
+                    hideNameSuggestions(inputElement);
+                    break;
+            }
+        }
+        
+        function updateActiveItem(suggestions, activeIndex) {
+            suggestions.forEach((item, index) => {
+                if (index === activeIndex) {
+                    item.classList.add('active');
+                    item.style.backgroundColor = 'var(--primary-light)';
+                } else {
+                    item.classList.remove('active');
+                    item.style.backgroundColor = '';
+                }
+            });
+        }
     </script>
 </body>
 </html>
