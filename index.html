@@ -2160,16 +2160,97 @@
             console.log('Loading dashboard data...');
         }
 
+        // Load database names with sample data for testing
         async function loadDatabaseNames() {
             try {
+                console.log('Loading database names...');
                 const result = await callAPI('getDatabaseNames');
                 if (result && result.success) {
                     databaseNames = result.data || [];
+                    console.log('Database names loaded:', databaseNames.length, 'records');
+                    console.log('Sample data:', databaseNames.slice(0, 3));
+                } else {
+                    console.error('Failed to load database names:', result ? result.error : 'Unknown error');
+                    // ใช้ข้อมูลตัวอย่างถ้าโหลดไม่ได้
+                    databaseNames = createSampleData();
+                    console.log('Using sample data instead:', databaseNames.length, 'records');
                 }
             } catch (error) {
                 console.error('Error loading database names:', error);
-                databaseNames = [];
+                // ใช้ข้อมูลตัวอย่างถ้าเกิด error
+                databaseNames = createSampleData();
+                console.log('Using sample data due to error:', databaseNames.length, 'records');
             }
+        }
+
+        // Create sample data for testing
+        function createSampleData() {
+            return [
+                {
+                    prefix: 'นางสาว',
+                    firstName: 'สมศรี',
+                    lastName: 'ใจดี',
+                    department: 'หอผู้ป่วยอายุรกรรม',
+                    work: 'งานพยาบาลผู้ป่วยใน',
+                    workGroup: 'กลุ่มงานการพยาบาลผู้ป่วยใน'
+                },
+                {
+                    prefix: 'นาง',
+                    firstName: 'มาลี',
+                    lastName: 'สุขใส',
+                    department: 'หอผู้ป่วยศัลยกรรม',
+                    work: 'งานพยาบาลผู้ป่วยใน',
+                    workGroup: 'กลุ่มงานการพยาบาลผู้ป่วยใน'
+                },
+                {
+                    prefix: 'นาย',
+                    firstName: 'สมชาย',
+                    lastName: 'กตัญญู',
+                    department: 'หอผู้ป่วยศัลยกรรมหัวใจ',
+                    work: 'งานพยาบาลผู้ป่วยใน',
+                    workGroup: 'กลุ่มงานการพยาบาลผู้ป่วยใน'
+                },
+                {
+                    prefix: 'นางสาว',
+                    firstName: 'วิภา',
+                    lastName: 'สุขสมัย',
+                    department: 'หอผู้ป่วยกุมารเวชกรรม',
+                    work: 'งานพยาบาลผู้ป่วยใน',
+                    workGroup: 'กลุ่มงานการพยาบาลผู้ป่วยใน'
+                },
+                {
+                    prefix: 'นาง',
+                    firstName: 'สุดา',
+                    lastName: 'อารีย์',
+                    department: 'ห้องผ่าตัด',
+                    work: 'งานการพยาบาลรอบการผ่าตัด',
+                    workGroup: 'กลุ่มงานการพยาบาลรอบการผ่าตัด'
+                },
+                {
+                    prefix: 'นางสาว',
+                    firstName: 'จิรา',
+                    lastName: 'เมธีกุล',
+                    department: 'หอผู้ป่วยสูติกรรม',
+                    work: 'งานพยาบาลมารดาและทารก',
+                    workGroup: 'กลุ่มงานการพยาบาลมารดาและทารก'
+                },
+                {
+                    prefix: 'นาย',
+                    firstName: 'ธนา',
+                    lastName: 'วิศวกุล',
+                    department: 'แผนกฉุกเฉิน',
+                    work: 'งานพยาบาลฉุกเฉิน',
+                    workGroup: 'กลุ่มงานการพยาบาลฉุกเฉิน'
+                },
+                {
+                    prefix: 'นาง',
+                    firstName: 'สุนีย์',
+                    lastName: 'ศรีสุข',
+                    department: 'แผนกเวชกรรมป้องกัน',
+                    work: 'งานส่งเสริมสุขภาพ',
+                    workGroup: 'กลุ่มงานส่งเสริมสุขภาพ'
+                }
+            ];
         }
 
         async function checkConnectionStatus() {
@@ -2181,11 +2262,19 @@
                     if (result && result.success) {
                         statusElement.textContent = 'เชื่อมต่อแล้ว';
                         statusElement.style.color = 'var(--success-color)';
+                        
+                        // โหลดข้อมูลชื่อหลังจากเชื่อมต่อสำเร็จ
+                        console.log('✅ Connection successful, loading database names...');
+                        await loadDatabaseNames();
                     } else {
-                        statusElement.textContent = 'ปัญหา CORS - ต้องแก้ไข Google Apps Script';
+                        statusElement.textContent = 'ปัญหา CORS - ใช้ข้อมูลตัวอย่าง';
                         statusElement.style.color = 'var(--warning-color)';
                         
-                        // Show CORS fix instructions
+                        // ใช้ข้อมูลตัวอย่างแทน
+                        console.log('⚠️ Connection failed, using sample data...');
+                        databaseNames = createSampleData();
+                        console.log('📊 Sample data loaded:', databaseNames.length, 'records');
+                        
                         setTimeout(() => {
                             showCORSInstructions();
                         }, 2000);
@@ -2194,9 +2283,14 @@
             } catch (error) {
                 const statusElement = document.getElementById('connectionStatus');
                 if (statusElement) {
-                    statusElement.textContent = 'ปัญหา CORS - ต้องแก้ไข Google Apps Script';
+                    statusElement.textContent = 'ใช้ข้อมูลตัวอย่าง';
                     statusElement.style.color = 'var(--warning-color)';
                 }
+                
+                // ใช้ข้อมูลตัวอย่าง
+                console.log('🔄 Using sample data due to connection error...');
+                databaseNames = createSampleData();
+                console.log('📊 Sample data loaded:', databaseNames.length, 'records');
             }
         }
 
