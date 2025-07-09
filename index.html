@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -1378,7 +1379,7 @@
 
     <script>
         // Configuration
-        const API_URL = 'https://script.google.com/macros/s/AKfycbwlVx82R4NkzzysUPn6g6PzPYmRz43zi45ETzd9Lxsj1VKs4rPr7nyeD8PNhhrIboIJTQ/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxuxGulbwyHu1ovbXlkccSgxvTliesipCS1owevmI4DJNjSVSz3SrvjKZISYAOvPqWdQA/exec';
         
         // Global variables
         let databaseNames = [];
@@ -3315,30 +3316,36 @@
 <script>
 let autoData = [];
 
-async function loadAutoData() {
-    try {
-        const res = await fetch("https://script.google.com/macros/s/DEPLOYMENT_ID/exec?action=getAutoData");
-        const json = await res.json();
-        if (json.success) {
-            autoData = json.data;
-        }
-    } catch (err) {
-        console.error("โหลดข้อมูล Auto ล้มเหลว", err);
-    }
+function loadAutoDataCallback(json) {
+  if (json.success) {
+    autoData = json.data;
+    console.log("โหลด Auto สำเร็จ", autoData);
+  } else {
+    console.error("โหลด Auto ล้มเหลว", json.error);
+  }
 }
 
-document.getElementById("firstName").addEventListener("input", function() {
+function injectScript() {
+  const script = document.createElement("script");
+  script.src = "https://script.google.com/macros/s/AKfycbxuxGulbwyHu1ovbXlkccSgxvTliesipCS1owevmI4DJNjSVSz3SrvjKZISYAOvPqWdQA/exec?action=getAutoData&callback=loadAutoDataCallback";
+  document.body.appendChild(script);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  injectScript();
+
+  document.getElementById("firstName").addEventListener("input", function() {
     const input = this.value.trim();
     const match = autoData.find(item => item.firstName === input);
     if (match) {
-        document.getElementById("lastName").value = match.lastName;
-        document.getElementById("department").value = match.department;
-        document.getElementById("work").value = match.work;
-        document.getElementById("workGroup").value = match.workGroup;
+      document.getElementById("lastName").value = match.lastName;
+      document.getElementById("department").value = match.department;
+      document.getElementById("work").value = match.work;
+      document.getElementById("workGroup").value = match.workGroup;
     }
+  });
 });
-
-window.addEventListener("DOMContentLoaded", loadAutoData);
 </script>
 </body>
+
 </html>
