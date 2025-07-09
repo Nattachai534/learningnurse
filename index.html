@@ -28,7 +28,22 @@
             --border-radius: 16px;
             --border-radius-small: 8px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        // Placeholder functions
+        function displayData() { console.log('Display data called'); }
+        function previousPage() { console.log('Previous page called'); }
+        function nextPage() { console.log('Next page called'); }
+        function showDetail(id) { console.log('Show detail called for ID:', id); }
+        function requestEdit(id) { console.log('Request edit called for ID:', id); }
+        function deleteRecord(id) { console.log('Delete record called for ID:', id); }
+        function exportData(format) { console.log('Export data called with format:', format); }
+        function toggleSearchFields() { console.log('Toggle search fields called'); }
+        function performSearch() { console.log('Perform search called'); }
+        function closeDetailModal() { console.log('Close detail modal called'); }
+        function closeEditAccessModal() { console.log('Close edit access modal called'); }
+        function validateEditAccess() { console.log('Validate edit access called'); }
+    </script>
+</body>
+</html>
 
         * {
             margin: 0;
@@ -1171,6 +1186,16 @@
                                 <i class="fas fa-save"></i>
                                 บันทึกข้อมูลการศึกษา
                             </button>
+                            
+                            <button type="button" class="btn btn-warning" id="testBtn" onclick="testAutoFillNow()" style="margin-left: 1rem;">
+                                <i class="fas fa-vial"></i>
+                                ทดสอบ Auto-Fill
+                            </button>
+                            
+                            <button type="button" class="btn btn-info" onclick="showDatabaseInfo()" style="margin-left: 1rem;">
+                                <i class="fas fa-database"></i>
+                                ดูข้อมูลฐาน
+                            </button>
                         </div>
 
                         <div class="loading" id="loading">
@@ -1997,10 +2022,98 @@
             updateDeleteButtons('mastersDegreeList');
             updateDeleteButtons('doctoralDegreeList');
             
+            // Set current year for dashboard
+            const currentYear = new Date().getFullYear() + 543;
+            const dashboardYearSelect = document.getElementById('dashboardYear');
+            if (dashboardYearSelect) {
+                dashboardYearSelect.value = currentYear.toString();
+            }
+            
             // Load initial data
             loadDatabaseNames();
             checkConnectionStatus();
+            
+            // เพิ่มปุ่มทดสอบ auto-fill
+            setTimeout(() => {
+                addTestButton();
+            }, 1000);
         });
+
+        // Function to add test button
+        function addTestButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (submitBtn && !document.getElementById('testAutoFillBtn')) {
+                console.log('🔧 Adding test button...');
+                
+                // สร้างปุ่มทดสอบ
+                const testBtn = document.createElement('button');
+                testBtn.type = 'button';
+                testBtn.id = 'testAutoFillBtn';
+                testBtn.className = 'btn btn-warning';
+                testBtn.style.marginLeft = '1rem';
+                testBtn.innerHTML = '<i class="fas fa-vial"></i> ทดสอบ Auto-Fill';
+                
+                testBtn.onclick = function() {
+                    console.log('🧪 Testing auto-fill...');
+                    console.log('📊 Available database:', databaseNames);
+                    
+                    if (databaseNames && databaseNames.length > 0) {
+                        const testData = databaseNames[0];
+                        console.log('📝 Using test data:', testData);
+                        autoFillPersonData(testData);
+                    } else {
+                        console.log('❌ No test data available');
+                        showMessage('ไม่มีข้อมูลทดสอบ กำลังสร้างข้อมูลตัวอย่าง...', 'warning');
+                        
+                        // สร้างข้อมูลตัวอย่างและทดสอบ
+                        databaseNames = createSampleData();
+                        if (databaseNames.length > 0) {
+                            setTimeout(() => {
+                                autoFillPersonData(databaseNames[0]);
+                            }, 1000);
+                        }
+                    }
+                };
+                
+                // เพิ่มปุ่มหลังปุ่มบันทึก
+                const parentDiv = submitBtn.parentNode;
+                parentDiv.style.display = 'flex';
+                parentDiv.style.justifyContent = 'center';
+                parentDiv.style.alignItems = 'center';
+                parentDiv.style.gap = '1rem';
+                parentDiv.style.flexWrap = 'wrap';
+                
+                parentDiv.appendChild(testBtn);
+                
+                console.log('✅ Test button added successfully');
+            } else if (!submitBtn) {
+                console.error('❌ Submit button not found');
+            } else {
+                console.log('ℹ️ Test button already exists');
+            }
+        }
+
+        // Function to manually test auto-fill (สามารถเรียกใน console ได้)
+        function testAutoFillManually() {
+            console.log('🧪 Manual auto-fill test...');
+            
+            // ตรวจสอบข้อมูลก่อน
+            if (!databaseNames || databaseNames.length === 0) {
+                console.log('📊 Creating sample data...');
+                databaseNames = createSampleData();
+            }
+            
+            console.log('📝 Available data:', databaseNames);
+            
+            if (databaseNames.length > 0) {
+                const testData = databaseNames[0];
+                console.log('🎯 Testing with:', testData);
+                autoFillPersonData(testData);
+            } else {
+                console.error('❌ No data available for testing');
+            }
+        }
 
         // Form submission function
         async function submitForm(event) {
@@ -2362,19 +2475,83 @@
             }
         }
         
-        // Placeholder functions
-        function displayData() { console.log('Display data called'); }
-        function previousPage() { console.log('Previous page called'); }
-        function nextPage() { console.log('Next page called'); }
-        function showDetail(id) { console.log('Show detail called for ID:', id); }
-        function requestEdit(id) { console.log('Request edit called for ID:', id); }
-        function deleteRecord(id) { console.log('Delete record called for ID:', id); }
-        function exportData(format) { console.log('Export data called with format:', format); }
-        function toggleSearchFields() { console.log('Toggle search fields called'); }
-        function performSearch() { console.log('Perform search called'); }
-        function closeDetailModal() { console.log('Close detail modal called'); }
-        function closeEditAccessModal() { console.log('Close edit access modal called'); }
-        function validateEditAccess() { console.log('Validate edit access called'); }
+        // Functions สำหรับปุ่มทดสอบ
+        function testAutoFillNow() {
+            console.log('🧪 Testing Auto-Fill NOW...');
+            
+            // ตรวจสอบข้อมูลก่อน
+            if (!databaseNames || databaseNames.length === 0) {
+                console.log('📊 No data found, creating sample data...');
+                databaseNames = createSampleData();
+                showMessage('สร้างข้อมูลตัวอย่างแล้ว', 'info');
+            }
+            
+            console.log('📝 Available database:', databaseNames);
+            console.log('🎯 Total records:', databaseNames.length);
+            
+            if (databaseNames.length > 0) {
+                const testData = databaseNames[0]; // ใช้คนแรก
+                console.log('🎯 Testing with data:', testData);
+                
+                showMessage(`กำลังทดสอบกับข้อมูล: ${testData.firstName} ${testData.lastName}`, 'info');
+                
+                setTimeout(() => {
+                    autoFillPersonData(testData);
+                }, 500);
+            } else {
+                console.error('❌ Still no data available');
+                showMessage('ไม่มีข้อมูลสำหรับทดสอบ', 'error');
+            }
+        }
+
+        function showDatabaseInfo() {
+            console.log('📊 Database Info:');
+            console.log('Total records:', databaseNames ? databaseNames.length : 0);
+            console.log('Data:', databaseNames);
+            
+            if (databaseNames && databaseNames.length > 0) {
+                const info = databaseNames.map((item, index) => 
+                    `${index + 1}. ${item.firstName} ${item.lastName} - ${item.department}`
+                ).join('\n');
+                
+                Swal.fire({
+                    title: 'ข้อมูลในฐานข้อมูล',
+                    html: `
+                        <div style="text-align: left; max-height: 400px; overflow-y: auto;">
+                            <p><strong>จำนวนรายการ:</strong> ${databaseNames.length}</p>
+                            <hr>
+                            ${databaseNames.map((item, index) => `
+                                <div style="margin-bottom: 1rem; padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                                    <strong>${index + 1}. ${item.firstName} ${item.lastName}</strong><br>
+                                    <small>🏥 ${item.department}</small><br>
+                                    <small>💼 ${item.work}</small><br>
+                                    <small>👥 ${item.workGroup}</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `,
+                    confirmButtonText: 'ปิด',
+                    confirmButtonColor: '#e91e63',
+                    width: 600
+                });
+            } else {
+                showMessage('ไม่มีข้อมูลในฐานข้อมูล', 'warning');
+            }
+        }
+
+        // Function สำหรับทดสอบโดยการพิมพ์นามสกุล
+        function testByLastName(lastName) {
+            console.log(`🔍 Testing with lastName: ${lastName}`);
+            
+            const lastNameInput = document.getElementById('lastName');
+            if (lastNameInput) {
+                lastNameInput.value = lastName;
+                lastNameInput.dispatchEvent(new Event('change'));
+                showMessage(`ทดสอบด้วยนามสกุล: ${lastName}`, 'info');
+            } else {
+                console.error('❌ LastName input not found');
+            }
+        }
     </script>
 </body>
 </html>
