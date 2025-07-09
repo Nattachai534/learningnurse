@@ -189,7 +189,6 @@
         }
         .name-suggestion-item { padding: 0.75rem 1rem; cursor: pointer; transition: background 0.2s; }
         .name-suggestion-item:hover { background: var(--primary-light); }
-        /* View Data Table */
         .data-table { width: 100%; border-collapse: collapse; background: white; overflow: hidden; border-radius: var(--border-radius); box-shadow: var(--shadow-medium); }
         .data-table th, .data-table td { padding: 1rem 1.5rem; text-align: left; }
         .data-table thead { background: var(--primary-dark); color: white; }
@@ -198,7 +197,6 @@
         .data-table tbody tr:hover { background-color: #fcf4f7; }
         .table-actions button { margin: 0 4px; padding: 0.5rem 1rem; font-size: 0.9rem; }
         .pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-        /* Modal */
         .modal {
             display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%;
             overflow: auto; background-color: rgba(0,0,0,0.5);
@@ -217,7 +215,6 @@
         .detail-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
         .detail-section h4 { color: var(--primary-dark); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary-light); }
         .detail-section p { margin-bottom: 0.5rem; }
-        /* Dashboard */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;}
         .stat-card {
             color: white; padding: 1.5rem; border-radius: var(--border-radius);
@@ -250,10 +247,10 @@
 
         <nav class="nav-container">
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="showTab('form')"><i class="fas fa-edit"></i><span>กรอก/แก้ไขข้อมูล</span></button>
-                <button class="nav-tab" onclick="showTab('view')"><i class="fas fa-list-alt"></i><span>ดูข้อมูลทั้งหมด</span></button>
-                <button class="nav-tab" onclick="showTab('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></button>
-                <button class="nav-tab" onclick="showTab('search')"><i class="fas fa-search"></i><span>ค้นหา</span></button>
+                <button class="nav-tab active" data-tab="form" onclick="showTab('form')"><i class="fas fa-edit"></i><span>กรอก/แก้ไขข้อมูล</span></button>
+                <button class="nav-tab" data-tab="view" onclick="showTab('view')"><i class="fas fa-list-alt"></i><span>ดูข้อมูลทั้งหมด</span></button>
+                <button class="nav-tab" data-tab="dashboard" onclick="showTab('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></button>
+                <button class="nav-tab" data-tab="search" onclick="showTab('search')"><i class="fas fa-search"></i><span>ค้นหา</span></button>
             </div>
         </nav>
 
@@ -463,28 +460,14 @@
         // ===================================================================================
         // CONFIGURATION
         // ===================================================================================
-        // !!! IMPORTANT !!!
-        // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxuxGulbwyHu1ovbXlkccSgxvTliesipCS1owevmI4DJNjSVSz3SrvjKZISYAOvPqWdQA/exec';
-        // !!! IMPORTANT !!!
+        // !!! สำคัญมาก !!!
+        // ให้นำ URL ที่ได้จากการ Deploy ใหม่ มาวางที่นี่
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwgiUYsYKrjXgU8Vj3UjczIvLhq60NS5iL12GLX4u_609PL3mZSdHSBRO2rxjsabWdcTA/exec';
+        // !!! สำคัญมาก !!!
 
         const ITEMS_PER_PAGE = 10;
-
-        // ===================================================================================
-        // STATE MANAGEMENT
-        // ===================================================================================
-        let state = {
-            databaseNames: [],
-            allRecords: [],
-            filteredRecords: [],
-            currentPage: 1,
-            editingRecordId: null,
-            charts: {}
-        };
-
-        // ===================================================================================
-        // INITIALIZATION
-        // ===================================================================================
+        let state = { databaseNames: [], allRecords: [], filteredRecords: [], currentPage: 1, editingRecordId: null, charts: {} };
+        
         document.addEventListener('DOMContentLoaded', initialize);
 
         async function initialize() {
@@ -500,7 +483,7 @@
         }
         
         function setupEventListeners() {
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', () => showTab(tab.dataset.tab)));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', (e) => showTab(e.currentTarget.dataset.tab)));
             document.getElementById('educationForm').addEventListener('submit', handleFormSubmit);
             document.getElementById('birthDate').addEventListener('change', updateRetirementInfo);
             
@@ -517,46 +500,42 @@
             document.getElementById('searchType').addEventListener('change', toggleSearchFields);
         }
 
-        // ===================================================================================
-        // API & UTILITIES
-        // ===================================================================================
         async function callAPI(action, payload = {}, method = 'POST') {
             showLoading(true);
             try {
-                const body = JSON.stringify({ action, ...payload });
+                // สำหรับ POST request เราจะส่งข้อมูลใน body
                 const response = await fetch(API_URL, {
                     method: method,
                     headers: { 'Content-Type': 'application/json' },
-                    body: body,
+                    body: JSON.stringify({ action, ...payload }),
                     mode: 'cors'
                 });
 
-                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                if (!response.ok) {
+                   throw new Error(`Network response was not ok. Status: ${response.status} ${response.statusText}`);
+                }
                 
                 const result = await response.json();
-                if (!result.success) throw new Error(result.error || 'An unknown API error occurred.');
-                
+                if (result && result.success === false) { // Check for success:false explicitly
+                    throw new Error(result.error || 'An unknown API error occurred.');
+                }
                 return result;
             } catch (error) {
                 console.error('API Error:', error);
                 showMessage('API Error', error.message, 'error');
+                // อัปเดตสถานะการเชื่อมต่อเมื่อเกิด Error
+                const statusEl = document.getElementById('connectionStatus');
+                statusEl.textContent = `การเชื่อมต่อล้มเหลว (CORS Error)`;
+                statusEl.style.color = 'var(--error-color)';
                 return null;
             } finally {
                 showLoading(false);
             }
         }
 
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
-        }
-
-        function showMessage(title, text, icon) {
-            Swal.fire({ title, text, icon, confirmButtonColor: 'var(--primary-color)' });
-        }
-
-        // ===================================================================================
-        // TAB & MODAL MANAGEMENT
-        // ===================================================================================
+        function showLoading(show) { document.getElementById('loadingOverlay').classList.toggle('hidden', !show); }
+        function showMessage(title, text, icon) { Swal.fire({ title, text, icon, confirmButtonColor: 'var(--primary-color)' }); }
+        
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -564,42 +543,29 @@
             document.getElementById(tabName).classList.add('active');
             document.querySelector(`.nav-tab[data-tab='${tabName}']`).classList.add('active');
             
-            if(tabName === 'view') loadViewData();
+            if(tabName === 'view' && state.allRecords.length === 0) loadViewData();
             if(tabName === 'dashboard') setupDashboard();
         }
 
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = 'flex';
-        }
-
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
         function closeModal(modalId, event) {
             if (event && event.target.id !== modalId) return;
             document.getElementById(modalId).style.display = 'none';
         }
         
-        // ===================================================================================
-        // DATA LOADING & INITIAL SETUP
-        // ===================================================================================
         async function checkConnectionStatus() {
             const statusEl = document.getElementById('connectionStatus');
-            try {
-                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({action: 'test'}), headers: {'Content-Type': 'application/json'} });
-                const result = await response.json();
-                if (result.success) {
-                    statusEl.textContent = 'เชื่อมต่อสำเร็จ';
-                    statusEl.style.color = 'var(--success-color)';
-                } else {
-                    throw new Error('Connection failed');
-                }
-            } catch (error) {
-                statusEl.textContent = 'การเชื่อมต่อล้มเหลว';
-                statusEl.style.color = 'var(--error-color)';
+            statusEl.textContent = 'กำลังตรวจสอบ...';
+            statusEl.style.color = 'var(--text-secondary)';
+            const result = await callAPI('test', {}, 'POST'); // Use POST for testing
+            if (result && result.success) {
+                statusEl.textContent = 'เชื่อมต่อสำเร็จ';
+                statusEl.style.color = 'var(--success-color)';
             }
         }
         
         async function loadDatabaseNames() {
-            const result = await callAPI('getDatabaseNames');
+            const result = await callAPI('getDatabaseNames', {}, 'POST');
             if (result && result.data) {
                 state.databaseNames = result.data;
             }
@@ -632,7 +598,7 @@
                 if (!select) return;
                 select.innerHTML = '';
                 for (let i = 0; i < 22; i++) {
-                    const year = currentBuddhistYear + i - 2; // Range from current-2 to current+19
+                    const year = currentBuddhistYear + i - 2;
                     select.appendChild(createOption(year, year));
                 }
                 select.value = currentBuddhistYear;
@@ -646,9 +612,6 @@
             Object.entries(searchTypes).forEach(([value, text]) => searchTypeSelect.appendChild(createOption(value, text)));
         }
 
-        // ===================================================================================
-        // FORM HANDLING
-        // ===================================================================================
         function handleOtherOption(event) {
             const select = event.target;
             const otherInput = document.getElementById(`${select.id}Other`);
@@ -659,16 +622,13 @@
         
         function handleConditionalDropdowns() {
             const isAnyOther = ['prefix', 'position', 'level'].some(id => document.getElementById(id).value === 'อื่นๆ');
-            
             ['department', 'work', 'workGroup'].forEach(id => {
                 const textInput = document.getElementById(id);
                 const selectInput = document.getElementById(`${id}Select`);
-                
                 textInput.classList.toggle('hidden', isAnyOther);
                 selectInput.classList.toggle('hidden', !isAnyOther);
-                
                 if (isAnyOther) {
-                    const uniqueValues = [...new Set(state.databaseNames.map(item => item[id]).filter(Boolean))];
+                    const uniqueValues = [...new Set(state.databaseNames.map(item => item[id.replace('Select','')] || '').filter(Boolean))];
                     selectInput.innerHTML = `<option value="">เลือก${textInput.previousElementSibling.textContent}...</option>`;
                     uniqueValues.forEach(val => selectInput.innerHTML += `<option value="${val}">${val}</option>`);
                     textInput.value = '';
@@ -688,7 +648,7 @@
                 return;
             }
 
-            const suggestions = state.databaseNames.filter(item => item[field] && item[field].toLowerCase().includes(term));
+            const suggestions = state.databaseNames.filter(item => (item[field] || '').toLowerCase().includes(term));
             if (suggestions.length > 0) {
                 suggestions.forEach(item => {
                     const div = document.createElement('div');
@@ -710,14 +670,12 @@
             document.getElementById('department').value = person.department || '';
             document.getElementById('work').value = person.work || '';
             document.getElementById('workGroup').value = person.workGroup || '';
-            
             document.querySelectorAll('.name-suggestions').forEach(s => s.classList.add('hidden'));
         }
 
         function updateRetirementInfo() {
             const birthDate = document.getElementById('birthDate').value;
             if (!birthDate) return;
-
             const retirementDate = calculateRetirementDate(birthDate);
             document.getElementById('retirementDisplay').textContent = retirementDate;
             document.getElementById('remainingTimeDisplay').textContent = calculateRemainingTime(retirementDate);
@@ -758,22 +716,14 @@
         function renderEducationSections() {
             const container = document.getElementById('education-sections-container');
             container.innerHTML = '';
-
             const sections = [
                 {
                     id: 'specializedCourse', title: 'หลักสูตรการพยาบาลเฉพาะทาง', icon: 'fa-graduation-cap',
-                    fields: [
-                        { name: 'courseName', label: 'ชื่อหลักสูตร' },
-                        { name: 'institution', label: 'สถาบัน' },
-                        { name: 'graduationYear', label: 'ปีที่จบ' }
-                    ]
+                    fields: [ { name: 'courseName', label: 'ชื่อหลักสูตร' }, { name: 'institution', label: 'สถาบัน' }, { name: 'graduationYear', label: 'ปีที่จบ' } ]
                 },
                 {
                     id: 'preceptorCourse', title: 'หลักสูตร Preceptor', icon: 'fa-chalkboard-teacher',
-                    fields: [
-                        { name: 'duration', label: 'ระยะเวลาเรียน', placeholder: 'เช่น 40 ชั่วโมง' },
-                        { name: 'graduationYear', label: 'ปีที่จบ' }
-                    ]
+                    fields: [ { name: 'duration', label: 'ระยะเวลาเรียน', placeholder: 'เช่น 40 ชั่วโมง' }, { name: 'graduationYear', label: 'ปีที่จบ' } ]
                 },
                 {
                     id: 'mastersDegree', title: 'หลักสูตรปริญญาโท', icon: 'fa-user-graduate',
@@ -792,14 +742,12 @@
                     ]
                 }
             ];
-            
             sections.forEach(s => {
-                const sectionHTML = `
-                    <div class="form-section">
+                const sectionHTML = `<div class="form-section">
                         <div class="form-section-title"><i class="fas ${s.icon}"></i>${s.title} *</div>
                         <div class="radio-group">
-                            <label class="radio-item"><input type="radio" name="has${s.id.charAt(0).toUpperCase() + s.id.slice(1)}" value="เรียน" onclick="toggleCourseSection(this)"><span>เรียน</span></label>
-                            <label class="radio-item"><input type="radio" name="has${s.id.charAt(0).toUpperCase() + s.id.slice(1)}" value="ไม่ได้เรียน" onclick="toggleCourseSection(this)"><span>ไม่ได้เรียน</span></label>
+                            <label class="radio-item"><input type="radio" name="has${s.id.charAt(0).toUpperCase() + s.id.slice(1)}" value="เรียน" onclick="toggleCourseSection(this, true)"><span>เรียน</span></label>
+                            <label class="radio-item"><input type="radio" name="has${s.id.charAt(0).toUpperCase() + s.id.slice(1)}" value="ไม่ได้เรียน" onclick="toggleCourseSection(this, false)"><span>ไม่ได้เรียน</span></label>
                         </div>
                         <div id="${s.id}Section" class="course-section">
                             <div class="course-header">
@@ -808,19 +756,16 @@
                             </div>
                             <div id="${s.id}List"></div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 container.innerHTML += sectionHTML;
-                addCourseItem(s.id, []); // Add one initial empty item
+                addCourseItem(s.id, {});
             });
         }
         
-        function toggleCourseSection(radio) {
+        function toggleCourseSection(radio, show) {
             const section = radio.closest('.form-section').querySelector('.course-section');
-            const isStudied = radio.value === 'เรียน';
-            section.classList.toggle('show', isStudied);
+            section.classList.toggle('show', show);
             radio.parentElement.classList.add('checked');
-            // Uncheck sibling
             const sibling = radio.parentElement.nextElementSibling || radio.parentElement.previousElementSibling;
             if(sibling) sibling.classList.remove('checked');
         }
@@ -829,19 +774,19 @@
             const list = document.getElementById(`${sectionId}List`);
             const itemIndex = list.children.length;
             const newItem = document.createElement('div');
-newItem.className = 'course-item';
+            newItem.className = 'course-item';
 
             const sectionConfig = {
                 specializedCourse: [{ name: 'courseName', label: 'ชื่อหลักสูตร' }, { name: 'institution', label: 'สถาบัน' }, { name: 'graduationYear', label: 'ปีที่จบ' }],
-                preceptorCourse: [{ name: 'duration', label: 'ระยะเวลาเรียน', placeholder: 'เช่น 40 ชั่วโมง' }, { name: 'graduationYear', label: 'ปีที่จบ' }],
+                preceptorCourse: [{ name: 'duration', label: 'ระยะเวลาเรียน' }, { name: 'graduationYear', label: 'ปีที่จบ' }],
                 mastersDegree: [
                     { name: 'major', label: 'สาขา' }, { name: 'institution', label: 'สถาบัน' }, { name: 'graduationYear', label: 'ปีที่จบ' },
-                    { name: 'educationType', label: 'ประเภทการศึกษา', type: 'select', options: ['ภาคในเวลาราชการ', 'ภาคนอกเวลาราชการ'], tooltip: 'ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา' },
+                    { name: 'educationType', label: 'ประเภทการศึกษา', type: 'select', options: ['ภาคในเวลาราชการ', 'ภาคนอกเวลาราชการ'], tooltip: 'ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว... | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัว...' },
                     { name: 'scholarship', label: 'ทุนการศึกษา', type: 'selectOther', options: ['ทุนกรมการแพทย์', 'ทุนรพ.ราชวิถี', 'ทุนส่วนตัว'] }
                 ],
                 doctoralDegree: [
                     { name: 'major', label: 'สาขา' }, { name: 'institution', label: 'สถาบัน' }, { name: 'graduationYear', label: 'ปีที่จบ' },
-                    { name: 'educationType', label: 'ประเภทการศึกษา', type: 'select', options: ['ภาคในเวลาราชการ', 'ภาคนอกเวลาราชการ'], tooltip: 'ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา' },
+                    { name: 'educationType', label: 'ประเภทการศึกษา', type: 'select', options: ['ภาคในเวลาราชการ', 'ภาคนอกเวลาราชการ'], tooltip: 'ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว... | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัว...' },
                     { name: 'scholarship', label: 'ทุนการศึกษา', type: 'selectOther', options: ['ทุนกรมการแพทย์', 'ทุนรพ.ราชวิถี', 'ทุนส่วนตัว'] }
                 ]
             }[sectionId];
@@ -853,15 +798,12 @@ newItem.className = 'course-item';
                 switch (field.type) {
                     case 'select':
                         inputHTML = `<select class="form-select" name="${fieldName}">${field.options.map(opt => `<option value="${opt}" ${value === opt ? 'selected' : ''}>${opt}</option>`).join('')}</select>`;
-                        if (field.tooltip) {
-                            inputHTML = `<div class="tooltip-container">${inputHTML}<i class="fas fa-info-circle tooltip-icon"></i><span class="tooltip-text">${field.tooltip}</span></div>`;
-                        }
+                        if (field.tooltip) inputHTML = `<div class="tooltip-container">${inputHTML}<i class="fas fa-info-circle tooltip-icon"></i><span class="tooltip-text">${field.tooltip}</span></div>`;
                         break;
                     case 'selectOther':
                         const otherValue = !field.options.includes(value) && value ? value : '';
                         const selectValue = otherValue ? 'อื่นๆ' : value;
-                        inputHTML = `
-                            <select class="form-select" name="${fieldName}" onchange="this.nextElementSibling.classList.toggle('hidden', this.value !== 'อื่นๆ')">
+                        inputHTML = `<select class="form-select" name="${fieldName}" onchange="this.nextElementSibling.classList.toggle('hidden', this.value !== 'อื่นๆ')">
                                 <option value="">เลือก...</option>
                                 ${field.options.map(opt => `<option value="${opt}" ${selectValue === opt ? 'selected' : ''}>${opt}</option>`).join('')}
                                 <option value="อื่นๆ" ${selectValue === 'อื่นๆ' ? 'selected' : ''}>อื่นๆ</option>
@@ -893,30 +835,21 @@ newItem.className = 'course-item';
             const formData = new FormData(form);
             let data = { id: state.editingRecordId };
             
-            // Basic fields
             for (let [key, value] of formData.entries()) {
                 if (!key.includes('[')) data[key] = value;
             }
-             // Handle "other" fields
-            ['prefix', 'position', 'level'].forEach(id => {
-                if (data[id] === 'อื่นๆ') data[id] = formData.get(`${id}Other`);
-            });
-            // Handle conditional dropdowns
+            ['prefix', 'position', 'level'].forEach(id => { if (data[id] === 'อื่นๆ') data[id] = formData.get(`${id}Other`); });
             if(['prefix', 'position', 'level'].some(id => document.getElementById(id).value === 'อื่นๆ')) {
                 data.department = formData.get('departmentSelect');
                 data.work = formData.get('workSelect');
                 data.workGroup = formData.get('workGroupSelect');
             }
 
-            // Complex fields (courses)
-            const courseSections = ['specializedCourse', 'preceptorCourse', 'mastersDegree', 'doctoralDegree'];
-            courseSections.forEach(sectionId => {
+            ['specializedCourse', 'preceptorCourse', 'mastersDegree', 'doctoralDegree'].forEach(sectionId => {
                 const items = [];
-                const courseList = document.getElementById(`${sectionId}List`);
-                courseList.querySelectorAll('.course-item').forEach((item, index) => {
+                document.querySelectorAll(`#${sectionId}List .course-item`).forEach((item) => {
                     const courseData = {};
-                    const inputs = item.querySelectorAll('input, select');
-                    inputs.forEach(input => {
+                    item.querySelectorAll('input, select').forEach(input => {
                         const nameMatch = input.name.match(/\[(\w+)\]/);
                         if (nameMatch) {
                             let key = nameMatch[1];
@@ -930,7 +863,7 @@ newItem.className = 'course-item';
                     if (Object.keys(courseData).length > 0) items.push(courseData);
                 });
                 const radioName = `has${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)}`;
-                data[radioName] = form.elements[radioName].value;
+                data[radioName] = form.elements[radioName] ? form.elements[radioName].value : 'ไม่ได้เรียน';
                 data[`${sectionId}s`] = items;
             });
             
@@ -940,7 +873,7 @@ newItem.className = 'course-item';
             if (result) {
                 showMessage(action === 'update' ? 'อัปเดตสำเร็จ' : 'บันทึกสำเร็จ', 'ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว', 'success');
                 resetForm();
-                loadViewData();
+                await loadViewData();
             }
         }
         
@@ -952,14 +885,12 @@ newItem.className = 'course-item';
             document.querySelectorAll('.course-section').forEach(s => s.classList.remove('show'));
             document.querySelectorAll('.radio-item').forEach(r => r.classList.remove('checked'));
             document.querySelectorAll('input[name*="Other"]').forEach(i => i.classList.add('hidden'));
-            renderEducationSections(); // Re-render to clear all items
+            document.querySelectorAll('.name-suggestions').forEach(s => s.classList.add('hidden'));
+            renderEducationSections();
         }
 
-        // ===================================================================================
-        // VIEW TAB
-        // ===================================================================================
         async function loadViewData() {
-            const result = await callAPI('read');
+            const result = await callAPI('read', {}, 'POST');
             if (result && result.data) {
                 state.allRecords = result.data;
                 filterAndDisplayData();
@@ -969,29 +900,19 @@ newItem.className = 'course-item';
         function filterAndDisplayData() {
             const searchTerm = document.getElementById('viewSearchInput').value.toLowerCase();
             const sortOrder = document.getElementById('sortSelect').value;
-
             let records = [...state.allRecords];
-            
-            // Filter
             if (searchTerm) {
-                records = records.filter(rec => 
-                    `${rec.prefix}${rec.firstName} ${rec.lastName}`.toLowerCase().includes(searchTerm) ||
-                    (rec.position && rec.position.toLowerCase().includes(searchTerm)) ||
-                    (rec.department && rec.department.toLowerCase().includes(searchTerm))
-                );
+                records = records.filter(rec => JSON.stringify(rec).toLowerCase().includes(searchTerm));
             }
-            
-            // Sort
             records.sort((a, b) => {
                 switch(sortOrder) {
                     case 'name_asc': return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`, 'th');
                     case 'name_desc': return `${b.firstName} ${b.lastName}`.localeCompare(`${a.firstName} ${a.lastName}`, 'th');
-                    case 'oldest': return new Date(a.timestamp.split('/').reverse().join('-')) - new Date(b.timestamp.split('/').reverse().join('-'));
+                    case 'oldest': return new Date(a.timestamp.split(' ')[0].split('/').reverse().join('-')) - new Date(b.timestamp.split(' ')[0].split('/').reverse().join('-'));
                     case 'newest':
-                    default: return new Date(b.timestamp.split('/').reverse().join('-')) - new Date(a.timestamp.split('/').reverse().join('-'));
+                    default: return new Date(b.timestamp.split(' ')[0].split('/').reverse().join('-')) - new Date(a.timestamp.split(' ')[0].split('/').reverse().join('-'));
                 }
             });
-
             state.filteredRecords = records;
             state.currentPage = 1;
             renderTablePage();
@@ -1000,7 +921,6 @@ newItem.className = 'course-item';
         function renderTablePage() {
             const tbody = document.getElementById('dataTableBody');
             tbody.innerHTML = '';
-
             const startIndex = (state.currentPage - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
             const pageData = state.filteredRecords.slice(startIndex, endIndex);
@@ -1009,19 +929,18 @@ newItem.className = 'course-item';
                 tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">ไม่พบข้อมูล</td></tr>`;
             } else {
                 pageData.forEach((rec, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${startIndex + index + 1}</td>
-                        <td>${rec.prefix} ${rec.firstName} ${rec.lastName}</td>
-                        <td>${rec.position || 'N/A'}</td>
-                        <td>${rec.department || 'N/A'}</td>
-                        <td class="table-actions" style="text-align:center;">
-                            <button class="btn btn-primary" onclick="showDetail('${rec.id}')"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning" onclick="requestEdit('${rec.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger" onclick="deleteRecord('${rec.id}')"><i class="fas fa-trash"></i></button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${startIndex + index + 1}</td>
+                            <td>${rec.prefix || ''} ${rec.firstName || ''} ${rec.lastName || ''}</td>
+                            <td>${rec.position || 'N/A'}</td>
+                            <td>${rec.department || 'N/A'}</td>
+                            <td class="table-actions" style="text-align:center;">
+                                <button class="btn btn-primary" onclick="showDetail('${rec.id}')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-warning" onclick="requestEdit('${rec.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger" onclick="deleteRecord('${rec.id}')"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>`;
                 });
             }
             updatePaginationControls();
@@ -1044,33 +963,22 @@ newItem.className = 'course-item';
             }
         }
 
-        // ===================================================================================
-        // CRUD ACTIONS
-        // ===================================================================================
         function showDetail(id) {
             const rec = state.allRecords.find(r => r.id === id);
             if (!rec) return;
-
             const renderCourseList = (courses, fields) => {
                 if (!courses || courses.length === 0) return '<p>ไม่มีข้อมูล</p>';
-                return courses.map(course => `
-                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                return courses.map(course => `<div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
                         ${fields.map(field => `<div><strong>${field.label}:</strong> ${course[field.key] || 'N/A'}</div>`).join('')}
-                    </div>
-                `).join('');
+                    </div>`).join('');
             };
-
-            document.getElementById('detailContent').innerHTML = `
-                <h2 style="color: var(--primary-dark); margin-bottom: 2rem;">รายละเอียด: ${rec.prefix} ${rec.firstName} ${rec.lastName}</h2>
+            document.getElementById('detailContent').innerHTML = `<h2 style="color: var(--primary-dark); margin-bottom: 2rem;">รายละเอียด: ${rec.prefix} ${rec.firstName} ${rec.lastName}</h2>
                 <div class="detail-grid">
                     <div class="detail-section"><h4>ข้อมูลส่วนบุคคล</h4>
-                        <p><strong>ตำแหน่ง:</strong> ${rec.position} (${rec.level})</p>
-                        <p><strong>หน่วยงาน:</strong> ${rec.department}</p>
-                        <p><strong>งาน:</strong> ${rec.work}</p><p><strong>กลุ่มงาน:</strong> ${rec.workGroup}</p>
-                        <p><strong>วันเกิด:</strong> ${rec.birthDate}</p>
-                        <p><strong>วันเกษียณ:</strong> ${rec.retirementDate}</p>
-                        <p><strong>เวลาที่เหลือ:</strong> ${rec.remainingTime}</p>
-                        <p><strong>วันที่บันทึก:</strong> ${rec.timestamp}</p>
+                        <p><strong>ตำแหน่ง:</strong> ${rec.position || 'N/A'} (${rec.level || 'N/A'})</p>
+                        <p><strong>หน่วยงาน:</strong> ${rec.department || 'N/A'}</p><p><strong>งาน:</strong> ${rec.work || 'N/A'}</p><p><strong>กลุ่มงาน:</strong> ${rec.workGroup || 'N/A'}</p>
+                        <p><strong>วันเกิด:</strong> ${rec.birthDate || 'N/A'}</p><p><strong>วันเกษียณ:</strong> ${rec.retirementDate || 'N/A'}</p><p><strong>เวลาที่เหลือ:</strong> ${rec.remainingTime || 'N/A'}</p>
+                        <p><strong>วันที่บันทึก:</strong> ${rec.timestamp || 'N/A'}</p>
                     </div>
                     <div class="detail-section"><h4>การพยาบาลเฉพาะทาง: ${rec.hasSpecializedCourse}</h4>
                         ${renderCourseList(rec.specializedCourses, [{key: 'courseName', label: 'หลักสูตร'}, {key: 'institution', label: 'สถาบัน'}, {key: 'graduationYear', label: 'ปีจบ'}])}
@@ -1096,11 +1004,8 @@ newItem.className = 'course-item';
 
         async function validateEditAccess() {
             const licenseNumber = document.getElementById('accessLicenseNumber').value;
-            if (!licenseNumber) {
-                showMessage('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกเลขที่ใบอนุญาต', 'warning');
-                return;
-            }
-            const result = await callAPI('validateEdit', { recordId: state.editingRecordId, licenseNumber: licenseNumber });
+            if (!licenseNumber) return showMessage('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกเลขที่ใบอนุญาต', 'warning');
+            const result = await callAPI('validateEdit', { recordId: state.editingRecordId, licenseNumber });
             if (result && result.data) {
                 closeModal('editAccessModal');
                 populateFormForEdit(result.data);
@@ -1110,44 +1015,31 @@ newItem.className = 'course-item';
         function populateFormForEdit(rec) {
             resetForm();
             state.editingRecordId = rec.id;
-
-            // Populate simple fields
             Object.keys(rec).forEach(key => {
                 const el = document.getElementById(key);
                 if (el) el.value = rec[key];
             });
-            
-            // Populate select/other fields
             ['prefix', 'position', 'level'].forEach(id => {
                 const select = document.getElementById(id);
-                const otherInput = document.getElementById(`${id}Other`);
-                if ([...select.options].some(opt => opt.value === rec[id])) {
-                    select.value = rec[id];
-                } else {
+                if (![...select.options].some(opt => opt.value === rec[id])) {
                     select.value = 'อื่นๆ';
+                    const otherInput = document.getElementById(`${id}Other`);
                     otherInput.value = rec[id];
                     otherInput.classList.remove('hidden');
                 }
             });
-            
-            // Populate radio and course sections
             ['SpecializedCourse', 'PreceptorCourse', 'MastersDegree', 'DoctoralDegree'].forEach(course => {
                 const radioName = `has${course}`;
                 if (rec[radioName]) {
                     const radio = document.querySelector(`input[name="${radioName}"][value="${rec[radioName]}"]`);
-                    if (radio) {
-                        radio.checked = true;
-                        toggleCourseSection(radio);
-                    }
+                    if (radio) { radio.checked = true; toggleCourseSection(radio, rec[radioName] === 'เรียน'); }
                 }
                 const courseData = rec[`${course.toLowerCase()}s`];
                 const listId = `${course.charAt(0).toLowerCase() + course.slice(1)}List`;
-                document.getElementById(listId).innerHTML = ''; // Clear list
+                document.getElementById(listId).innerHTML = '';
                 if (courseData && courseData.length > 0) {
                     courseData.forEach(item => addCourseItem(listId.replace('List',''), item));
-                } else {
-                    addCourseItem(listId.replace('List',''));
-                }
+                } else { addCourseItem(listId.replace('List','')); }
             });
 
             updateRetirementInfo();
@@ -1159,79 +1051,52 @@ newItem.className = 'course-item';
 
         function deleteRecord(id) {
             Swal.fire({
-                title: 'ยืนยันการลบ',
-                text: "คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้? การกระทำนี้ไม่สามารถย้อนกลับได้",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: 'var(--error-color)',
-                cancelButtonColor: '#aaa',
-                confirmButtonText: 'ใช่, ลบเลย!',
-                cancelButtonText: 'ยกเลิก'
+                title: 'ยืนยันการลบ', text: "คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: 'var(--error-color)', cancelButtonColor: '#aaa',
+                confirmButtonText: 'ใช่, ลบเลย!', cancelButtonText: 'ยกเลิก'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     const deleteResult = await callAPI('delete', { id });
                     if (deleteResult) {
                         showMessage('ลบสำเร็จ', 'ข้อมูลถูกลบออกจากระบบแล้ว', 'success');
-                        loadViewData();
+                        await loadViewData();
                     }
                 }
             });
         }
         
         async function exportData(format) {
-            showMessage('กำลังเตรียมไฟล์', `กำลังสร้างไฟล์ ${format.toUpperCase()} กรุณารอสักครู่...`, 'info');
-            const result = await callAPI('exportData', { format });
+            showMessage('กำลังเตรียมไฟล์', `กำลังสร้างไฟล์ ${format.toUpperCase()}...`, 'info');
+            const result = await callAPI('exportData', { format }, 'POST');
             if (result && result.downloadUrl) {
                 window.open(result.downloadUrl, '_blank');
             }
         }
         
-        // ===================================================================================
-        // DASHBOARD
-        // ===================================================================================
         async function setupDashboard() {
             const year = document.getElementById('dashboardYearSelect').value;
-            const result = await callAPI('getDashboardData', { retirementYear: year });
-            if (result && result.data) {
-                renderDashboard(result.data);
-            }
+            const result = await callAPI('getDashboardData', { retirementYear: year }, 'POST');
+            if (result && result.data) renderDashboard(result.data, year);
         }
         
-        async function updateDashboard() {
-            await setupDashboard();
-        }
+        async function updateDashboard() { await setupDashboard(); }
 
-        function renderDashboard(data) {
-            // Stat Cards
+        function renderDashboard(data, year) {
             const stats = [
                 { icon: 'fa-users', value: data.totalNurses, label: 'พยาบาลทั้งหมด', color: 'linear-gradient(135deg, #667eea, #764ba2)'},
-                { icon: 'fa-user-clock', value: data.retirementCount, label: `ผู้เกษียณปี ${data.year || ''}`, color: 'linear-gradient(135deg, #f093fb, #f5576c)'},
+                { icon: 'fa-user-clock', value: data.retirementCount, label: `ผู้เกษียณปี ${year}`, color: 'linear-gradient(135deg, #f093fb, #f5576c)'},
                 { icon: 'fa-graduation-cap', value: data.educationStats.specialized, label: 'เฉพาะทาง', color: 'linear-gradient(135deg, #4facfe, #00f2fe)'},
                 { icon: 'fa-chalkboard-teacher', value: data.educationStats.preceptor, label: 'Preceptor', color: 'linear-gradient(135deg, #43e97b, #38f9d7)'}
             ];
-            document.getElementById('statCardsContainer').innerHTML = stats.map(s => `
-                <div class="stat-card" style="background:${s.color};">
-                    <i class="fas ${s.icon}"></i><h3>${s.value}</h3><p>${s.label}</p>
-                </div>
-            `).join('');
-
-            // Retirement List
-            document.getElementById('retirementListTitle').textContent = `รายชื่อผู้เกษียณอายุปี พ.ศ. ${data.year}`;
-            const listContainer = document.getElementById('retirementList');
-            if (data.retirementList.length > 0) {
-                listContainer.innerHTML = `<table class="data-table" style="box-shadow:none;">
-                    <thead><tr><th>ชื่อ</th><th>ตำแหน่ง</th><th>หน่วยงาน</th></tr></thead>
-                    <tbody>${data.retirementList.map(p => `<tr><td>${p.fullName}</td><td>${p.position}</td><td>${p.department}</td></tr>`).join('')}</tbody>
-                </table>`;
-            } else {
-                listContainer.innerHTML = '<p style="text-align:center; padding: 2rem;">ไม่มีข้อมูลผู้เกษียณในปีนี้</p>';
-            }
+            document.getElementById('statCardsContainer').innerHTML = stats.map(s => `<div class="stat-card" style="background:${s.color};"><i class="fas ${s.icon}"></i><h3>${s.value}</h3><p>${s.label}</p></div>`).join('');
+            document.getElementById('retirementListTitle').textContent = `รายชื่อผู้เกษียณอายุปี พ.ศ. ${year}`;
+            document.getElementById('retirementList').innerHTML = data.retirementList.length > 0 ? 
+                `<table class="data-table" style="box-shadow:none;"><thead><tr><th>ชื่อ</th><th>ตำแหน่ง</th><th>หน่วยงาน</th></tr></thead><tbody>${data.retirementList.map(p => `<tr><td>${p.fullName}</td><td>${p.position}</td><td>${p.department}</td></tr>`).join('')}</tbody></table>` : 
+                '<p style="text-align:center; padding: 2rem;">ไม่มีข้อมูลผู้เกษียณในปีนี้</p>';
             
-            // Charts
             renderChart('educationPieChart', 'pie', {
                 labels: ['เฉพาะทาง', 'Preceptor', 'ป.โท', 'ป.เอก'],
-                datasets: [{ data: [data.educationStats.specialized, data.educationStats.preceptor, data.educationStats.masters, data.educationStats.doctoral],
-                backgroundColor: ['#e91e63', '#3f51b5', '#ff9800', '#4caf50'] }]
+                datasets: [{ data: [data.educationStats.specialized, data.educationStats.preceptor, data.educationStats.masters, data.educationStats.doctoral], backgroundColor: ['#e91e63', '#3f51b5', '#ff9800', '#4caf50'] }]
             });
             renderChart('educationTypeBarChart', 'bar', {
                 labels: ['ป.โท', 'ป.เอก'],
@@ -1241,7 +1106,7 @@ newItem.className = 'course-item';
                 ]
             }, { scales: { x: { stacked: true }, y: { stacked: true } } });
             
-            const retirementYears = Object.keys(data.retirementStats).sort();
+            const retirementYears = Object.keys(data.retirementStats || {}).sort();
             renderChart('retirementBarChart', 'bar', {
                 labels: retirementYears,
                 datasets: [{ label: 'จำนวนผู้เกษียณ', data: retirementYears.map(y => data.retirementStats[y]), backgroundColor: '#f5576c' }]
@@ -1254,13 +1119,10 @@ newItem.className = 'course-item';
             state.charts[canvasId] = new Chart(ctx, { type, data, options });
         }
         
-        // ===================================================================================
-        // SEARCH TAB
-        // ===================================================================================
         function toggleSearchFields() {
             const type = document.getElementById('searchType').value;
             document.getElementById('searchYearContainer').classList.toggle('hidden', type !== 'retirement');
-            document.getElementById('searchTermContainer').classList.toggle('hidden', type === 'preceptor');
+            document.getElementById('searchTermContainer').classList.toggle('hidden', type === 'preceptor' || type === 'retirement');
         }
 
         async function performSearch() {
@@ -1268,30 +1130,17 @@ newItem.className = 'course-item';
             const term = document.getElementById('searchTerm').value;
             const year = document.getElementById('searchYear').value;
             
-            const result = await callAPI('search', { type, term, year });
+            const result = await callAPI('search', { type, term, year }, 'POST');
             const container = document.getElementById('searchResults');
-
             if (result && result.data.length > 0) {
-                container.innerHTML = `
-                <p style="margin-bottom: 1rem;">พบ ${result.data.length} รายการ</p>
-                <table class="data-table">
-                    <thead><tr><th>ชื่อ-นามสกุล</th><th>ตำแหน่ง</th><th>หน่วยงาน</th><th>รายละเอียด</th></tr></thead>
-                    <tbody>
-                        ${result.data.map(rec => `
-                            <tr>
-                                <td>${rec.prefix} ${rec.firstName} ${rec.lastName}</td>
-                                <td>${rec.position}</td>
-                                <td>${rec.department}</td>
-                                <td style="text-align:center;"><button class="btn btn-primary" onclick="showDetail('${rec.id}')"><i class="fas fa-eye"></i></button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>`;
+                container.innerHTML = `<p style="margin-bottom: 1rem;">พบ ${result.data.length} รายการ</p>
+                <table class="data-table"><thead><tr><th>ชื่อ-นามสกุล</th><th>ตำแหน่ง</th><th>หน่วยงาน</th><th>รายละเอียด</th></tr></thead><tbody>
+                ${result.data.map(rec => `<tr><td>${rec.prefix} ${rec.firstName} ${rec.lastName}</td><td>${rec.position}</td><td>${rec.department}</td><td style="text-align:center;"><button class="btn btn-primary" onclick="showDetail('${rec.id}')"><i class="fas fa-eye"></i></button></td></tr>`).join('')}
+                </tbody></table>`;
             } else {
                 container.innerHTML = '<p style="text-align:center; padding: 2rem;">ไม่พบข้อมูลที่ตรงกับเงื่อนไข</p>';
             }
         }
-
     </script>
 </body>
 </html>
