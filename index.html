@@ -1362,8 +1362,18 @@
     </div>
 
     <script>
-        // Configuration - ใส่ URL ใหม่ที่ได้จาก Google Apps Script
+        // Configuration - วาง URL ของ Google Apps Script ที่นี่
         const API_URL = 'https://script.google.com/macros/s/AKfycbwlVx82R4NkzzysUPn6g6PzPYmRz43zi45ETzd9Lxsj1VKs4rPr7nyeD8PNhhrIboIJTQ/exec';
+        
+        // หลังจากได้ URL จาก Google Apps Script แล้ว ให้เปลี่ยนบรรทัดข้างบนเป็น:
+        // const API_URL = 'https://script.google.com/macros/s/AKfycby.../exec';
+        
+        // ตรวจสอบ URL ก่อนใช้งาน
+        if (API_URL.includes('YOUR_ACTUAL_DEPLOYMENT_ID')) {
+            console.error('กรุณาอัพเดท API_URL ให้ถูกต้อง!');
+            document.getElementById('connectionStatus').textContent = 'กรุณาตั้งค่า API URL';
+            document.getElementById('connectionStatus').style.color = 'red';
+        }
         
         // Global variables
         let databaseNames = [];
