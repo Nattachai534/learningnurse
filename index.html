@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -666,6 +667,354 @@
         .text-center {
             text-align: center;
         }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-small);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .connection-status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .connection-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .connection-status.checking {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-indicator.connected {
+            background: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3);
+        }
+
+        .status-indicator.disconnected {
+            background: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
+        }
+
+        .status-indicator.checking {
+            background: #ffc107;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.5; 
+                transform: scale(1.2);
+            }
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-small);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .modal-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius-small);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+
+        .data-table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: top;
+        }
+
+        .data-table tr:hover {
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .page-info {
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: var(--border-radius-small);
+            border: 1px solid #e0e0e0;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.9;
+        }
+
+        .stat-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            margin: 0;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .search-filters {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-small);
+            margin-bottom: 2rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .no-data i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0.5;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-buttons .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: var(--border-radius-small);
+            border: 1px solid #f5c6cb;
+            margin: 1rem 0;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: var(--border-radius-small);
+            border: 1px solid #c3e6cb;
+            margin: 1rem 0;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -689,6 +1038,12 @@
                     <p class="subtitle">เฉพาะพยาบาลวิชาชีพ</p>
                     <p>งานถ่ายทอดการพยาบาล กลุ่มงานวิชาการพยาบาล</p>
                     <p>ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี</p>
+                    <div style="margin-top: 1rem;">
+                        <div id="connectionStatus" class="connection-status checking">
+                            <span class="status-indicator checking"></span>
+                            กำลังตรวจสอบการเชื่อมต่อ...
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -802,9 +1157,6 @@
                                     <label class="form-label" for="department">หน่วยงาน</label>
                                     <div class="input-container">
                                         <input class="form-input" type="text" id="department" name="department" placeholder="หน่วยงาน (จะถูกกรอกอัตโนมัติ)" readonly>
-                                        <select class="form-select hidden" id="departmentSelect" name="departmentSelect">
-                                            <option value="">เลือกหน่วยงาน</option>
-                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -814,9 +1166,6 @@
                                     <label class="form-label" for="work">งาน</label>
                                     <div class="input-container">
                                         <input class="form-input" type="text" id="work" name="work" placeholder="งาน (จะถูกกรอกอัตโนมัติ)" readonly>
-                                        <select class="form-select hidden" id="workSelect" name="workSelect">
-                                            <option value="">เลือกงาน</option>
-                                        </select>
                                     </div>
                                 </div>
 
@@ -824,9 +1173,6 @@
                                     <label class="form-label" for="workGroup">กลุ่มงาน</label>
                                     <div class="input-container">
                                         <input class="form-input" type="text" id="workGroup" name="workGroup" placeholder="กลุ่มงาน (จะถูกกรอกอัตโนมัติ)" readonly>
-                                        <select class="form-select hidden" id="workGroupSelect" name="workGroupSelect">
-                                            <option value="">เลือกกลุ่มงาน</option>
-                                        </select>
                                     </div>
                                 </div>
 
@@ -1117,7 +1463,7 @@
                 </div>
             </div>
 
-            <!-- View Tab - แสดงข้อมูลสำหรับผู้ดูแล -->
+            <!-- View Tab -->
             <div id="view" class="tab-content">
                 <div class="card">
                     <div class="card-header">
@@ -1137,70 +1483,44 @@
                     </div>
                     
                     <div id="dataContainer">
-                        <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                            <div>
+                        <div class="pagination">
+                            <div class="pagination-info">
                                 แสดง <span id="dataCount">0</span> รายการ จากทั้งหมด <span id="totalCount">0</span> รายการ
                             </div>
-                            <div style="display: flex; gap: 0.5rem;">
+                            <div class="pagination-controls">
                                 <button class="btn btn-primary" onclick="previousPage()" id="prevBtn" disabled>
                                     <i class="fas fa-chevron-left"></i> ก่อนหน้า
                                 </button>
-                                <span style="padding: 0.5rem 1rem; background: white; border-radius: 4px;">
+                                <div class="page-info">
                                     หน้า <span id="currentPage">1</span> จาก <span id="totalPages">1</span>
-                                </span>
+                                </div>
                                 <button class="btn btn-primary" onclick="nextPage()" id="nextBtn" disabled>
                                     ถัดไป <i class="fas fa-chevron-right"></i>
                                 </button>
                             </div>
                         </div>
                         
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-light);">
-                                <thead style="background: var(--primary-color); color: white;">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
                                     <tr>
-                                        <th style="padding: 1rem; text-align: left; border-right: 1px solid rgba(255,255,255,0.2);">ลำดับ</th>
-                                        <th style="padding: 1rem; text-align: left; border-right: 1px solid rgba(255,255,255,0.2);">ชื่อ-นามสกุล</th>
-                                        <th style="padding: 1rem; text-align: left; border-right: 1px solid rgba(255,255,255,0.2);">ตำแหน่ง</th>
-                                        <th style="padding: 1rem; text-align: left; border-right: 1px solid rgba(255,255,255,0.2);">หน่วยงาน</th>
-                                        <th style="padding: 1rem; text-align: center;">การจัดการ</th>
+                                        <th>ลำดับ</th>
+                                        <th>ชื่อ-นามสกุล</th>
+                                        <th>ตำแหน่ง</th>
+                                        <th>หน่วยงาน</th>
+                                        <th style="text-align: center;">การจัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dataTableBody">
                                     <tr>
-                                        <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-secondary);">
-                                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                                        <td colspan="5" class="no-data">
+                                            <i class="fas fa-spinner fa-spin"></i>
                                             กำลังโหลดข้อมูล...
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Modal สำหรับยืนยันการแก้ไข -->
-                <div id="editAccessModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-                    <div style="background: white; padding: 2rem; border-radius: 16px; max-width: 400px; width: 90%;">
-                        <h3 style="margin-bottom: 1rem; color: var(--primary-color);">ยืนยันตัวตน</h3>
-                        <p style="margin-bottom: 1rem; color: var(--text-secondary);">ติดต่อเจ้าหน้าที่งานถ่ายทอดการพยาบาล</p>
-                        <input type="text" id="accessCode" class="form-input" placeholder="กรอกเลขที่ใบอนุญาตประกอบวิชาชีพ" style="margin-bottom: 1rem;">
-                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                            <button class="btn" onclick="closeEditAccessModal()" style="background: #ccc; color: #333;">ยกเลิก</button>
-                            <button class="btn btn-primary" onclick="validateEditAccess()">ยืนยัน</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal สำหรับแสดงรายละเอียด -->
-                <div id="detailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto;">
-                    <div style="background: white; padding: 2rem; border-radius: 16px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; margin: 2rem auto;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                            <h3 style="color: var(--primary-color);">รายละเอียดข้อมูลการศึกษา</h3>
-                            <button onclick="closeDetailModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div id="detailContent"></div>
                     </div>
                 </div>
             </div>
@@ -1243,44 +1563,44 @@
                     </div>
                     
                     <div id="dashboardContent">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 16px; text-align: center;">
-                                <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <h3 style="margin: 0; font-size: 2rem;" id="totalNurses">0</h3>
-                                <p style="margin: 0; opacity: 0.9;">พยาบาลทั้งหมด</p>
+                        <div class="stats-grid">
+                            <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                                <i class="fas fa-users"></i>
+                                <h3 id="totalNurses">0</h3>
+                                <p>พยาบาลทั้งหมด</p>
                             </div>
-                            <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 1.5rem; border-radius: 16px; text-align: center;">
-                                <i class="fas fa-graduation-cap" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <h3 style="margin: 0; font-size: 2rem;" id="retirementCount">0</h3>
-                                <p style="margin: 0; opacity: 0.9;">ผู้เกษียณปีนี้</p>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h3 id="retirementCount">0</h3>
+                                <p>ผู้เกษียณปีนี้</p>
                             </div>
-                            <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 1.5rem; border-radius: 16px; text-align: center;">
-                                <i class="fas fa-certificate" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <h3 style="margin: 0; font-size: 2rem;" id="specializedCount">0</h3>
-                                <p style="margin: 0; opacity: 0.9;">วิชาชีพเฉพาะทาง</p>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                                <i class="fas fa-certificate"></i>
+                                <h3 id="specializedCount">0</h3>
+                                <p>วิชาชีพเฉพาะทาง</p>
                             </div>
-                            <div style="background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; padding: 1.5rem; border-radius: 16px; text-align: center;">
-                                <i class="fas fa-chalkboard-teacher" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <h3 style="margin: 0; font-size: 2rem;" id="preceptorCount">0</h3>
-                                <p style="margin: 0; opacity: 0.9;">Preceptor</p>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <h3 id="preceptorCount">0</h3>
+                                <p>Preceptor</p>
                             </div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
-                            <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow-light);">
-                                <h4 style="margin-bottom: 1rem; color: var(--primary-color);">การศึกษาต่อ</h4>
+                            <div class="chart-container">
+                                <h4 class="chart-title">การศึกษาต่อ</h4>
                                 <canvas id="educationChart"></canvas>
                             </div>
-                            <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow-light);">
-                                <h4 style="margin-bottom: 1rem; color: var(--primary-color);">การเกษียณอายุ</h4>
+                            <div class="chart-container">
+                                <h4 class="chart-title">การเกษียณอายุ</h4>
                                 <canvas id="retirementChart"></canvas>
                             </div>
                         </div>
 
-                        <div style="margin-top: 2rem;">
-                            <h4 style="margin-bottom: 1rem; color: var(--primary-color);">รายชื่อผู้เกษียณอายุปีนี้</h4>
-                            <div id="retirementList" style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow-light);">
-                                <p style="text-align: center; color: var(--text-secondary);">กำลังโหลดข้อมูล...</p>
+                        <div class="chart-container">
+                            <h4 class="chart-title">รายชื่อผู้เกษียณอายุปีนี้</h4>
+                            <div id="retirementList">
+                                <p class="no-data">กำลังโหลดข้อมูล...</p>
                             </div>
                         </div>
                     </div>
@@ -1297,8 +1617,8 @@
                         </h2>
                     </div>
                     
-                    <div style="margin-bottom: 2rem;">
-                        <div class="form-grid">
+                    <div class="search-filters">
+                        <div class="filter-grid">
                             <div class="form-group">
                                 <label class="form-label">ประเภทการค้นหา</label>
                                 <select id="searchType" class="form-select" onchange="toggleSearchFields()">
@@ -1342,17 +1662,19 @@
                                     <option value="2590">2590</option>
                                 </select>
                             </div>
+                            <div style="display: flex; align-items: end;">
+                                <button class="btn btn-primary" onclick="performSearch()">
+                                    <i class="fas fa-search"></i> ค้นหา
+                                </button>
+                            </div>
                         </div>
-                        <button class="btn btn-primary" onclick="performSearch()">
-                            <i class="fas fa-search"></i> ค้นหา
-                        </button>
                     </div>
 
                     <div id="searchResults">
-                        <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">
-                            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                        <div class="no-data">
+                            <i class="fas fa-search"></i>
                             กรอกคำค้นหาและกดปุ่มค้นหา
-                        </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1367,18 +1689,48 @@
                         <i class="fas fa-copyright"></i> 
                         Copyright @ งานถ่ายทอดการพยาบาล ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี
                     </p>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">
-                        <i class="fas fa-clock"></i> 
-                        สถานะการเชื่อมต่อ: <span id="connectionStatus">กำลังตรวจสอบ...</span>
-                    </p>
                 </div>
             </footer>
         </div>
     </div>
 
+    <!-- Modals -->
+    <!-- Edit Access Modal -->
+    <div id="editAccessModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">ยืนยันตัวตน</h3>
+                <button class="close-btn" onclick="closeEditAccessModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div>
+                <p style="margin-bottom: 1rem; color: var(--text-secondary);">ติดต่อเจ้าหน้าที่งานถ่ายทอดการพยาบาล</p>
+                <input type="text" id="accessCode" class="form-input" placeholder="กรอกเลขที่ใบอนุญาตประกอบวิชาชีพ" style="margin-bottom: 1rem;">
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button class="btn" onclick="closeEditAccessModal()" style="background: #ccc; color: #333;">ยกเลิก</button>
+                    <button class="btn btn-primary" onclick="validateEditAccess()">ยืนยัน</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">รายละเอียดข้อมูลการศึกษา</h3>
+                <button class="close-btn" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
     <script>
         // Configuration
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzKW1nY3ch4a2qnKGRqqwvVLIro4nnYNzERkj7Az3S6d8Vg_LjoraU7QJLjsqY7kl_3hg/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbz5ybUKTU78FQEKMlpneHneBfN3WiT8zoZdDLuHizIXLnsDhps2OWTqtjyEbSiuCYnqYQ/exec';
         
         // Global variables
         let databaseNames = [];
@@ -1387,53 +1739,250 @@
         const itemsPerPage = 10;
         let filteredData = [];
         let editingRecord = null;
+        let jsonpCallbackCounter = 0;
+        let connectionAttempts = 0;
+        const maxConnectionAttempts = 3;
 
-        // API call function - ต้องอยู่ด้านบนสุด
-        async function callAPI(action, data = {}) {
+        // JSONP Implementation - วิธีหลักในการเลี่ยง CORS
+        function createJSONPRequest(url, params = {}, timeout = 30000) {
+            return new Promise((resolve, reject) => {
+                try {
+                    // สร้าง callback name ที่ unique
+                    const callbackName = `jsonpCallback_${Date.now()}_${++jsonpCallbackCounter}`;
+                    
+                    // เพิ่ม callback parameter
+                    params.callback = callbackName;
+                    
+                    // สร้าง query string
+                    const queryString = Object.keys(params)
+                        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+                        .join('&');
+                    
+                    const fullUrl = `${url}?${queryString}`;
+                    console.log('JSONP Request URL:', fullUrl);
+                    
+                    // สร้าง script element
+                    const script = document.createElement('script');
+                    script.src = fullUrl;
+                    script.id = callbackName + '_script';
+                    
+                    // ตั้ง timeout
+                    const timeoutId = setTimeout(() => {
+                        cleanup();
+                        reject(new Error('JSONP Request Timeout'));
+                    }, timeout);
+                    
+                    // สร้าง global callback function
+                    window[callbackName] = function(data) {
+                        cleanup();
+                        resolve(data);
+                    };
+                    
+                    // Error handling
+                    script.onerror = function() {
+                        cleanup();
+                        reject(new Error('JSONP Script Error'));
+                    };
+                    
+                    // Cleanup function
+                    function cleanup() {
+                        clearTimeout(timeoutId);
+                        if (window[callbackName]) {
+                            try {
+                                delete window[callbackName];
+                            } catch (e) {
+                                window[callbackName] = undefined;
+                            }
+                        }
+                        if (script && script.parentNode) {
+                            try {
+                                script.parentNode.removeChild(script);
+                            } catch (e) {
+                                // Script already removed
+                            }
+                        }
+                    }
+                    
+                    // เพิ่ม script ไป DOM เพื่อเริ่ม request
+                    document.head.appendChild(script);
+                    
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // Fallback Fetch with retry mechanism
+        async function fallbackFetch(url, options = {}, maxRetries = 2) {
+            let lastError;
+            
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 15000);
+                    
+                    const response = await fetch(url, {
+                        ...options,
+                        signal: controller.signal,
+                        mode: 'cors',
+                        credentials: 'omit',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            ...options.headers
+                        }
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data;
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                } catch (error) {
+                    lastError = error;
+                    if (i < maxRetries - 1) {
+                        // รอก่อน retry
+                        await new Promise(resolve => setTimeout(resolve, (i + 1) * 1000));
+                    }
+                }
+            }
+            
+            throw lastError;
+        }
+
+        // Main API call function with multiple strategies
+        async function callAPI(action, data = {}, preferJSONP = true) {
             try {
                 console.log('API Call:', action, data);
+                updateConnectionStatus('checking');
                 
                 const payload = { action, ...data };
                 
-                // Try POST first
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams(payload)
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        console.log('API Response:', result);
-                        return result;
+                // แปลง object เป็น string สำหรับ JSONP
+                const jsonpPayload = {};
+                Object.keys(payload).forEach(key => {
+                    const value = payload[key];
+                    if (typeof value === 'object' && value !== null) {
+                        jsonpPayload[key] = JSON.stringify(value);
                     } else {
-                        throw new Error(`HTTP ${response.status}`);
+                        jsonpPayload[key] = String(value || '');
                     }
-                } catch (postError) {
-                    console.log('POST failed, trying GET...', postError.message);
-                    
-                    // Fallback to GET
-                    const queryParams = new URLSearchParams(payload);
-                    const getResponse = await fetch(`${API_URL}?${queryParams.toString()}`);
-                    
-                    if (getResponse.ok) {
-                        const result = await getResponse.json();
-                        console.log('GET Response:', result);
+                });
+                
+                // Strategy 1: JSONP (ใช้สำหรับ GET requests เป็นหลัก)
+                if (preferJSONP && ['read', 'getStats', 'getDashboardData', 'search', 'getDatabaseNames', 'test', 'validateEdit'].includes(action)) {
+                    try {
+                        console.log('Trying JSONP...');
+                        const result = await createJSONPRequest(API_URL, jsonpPayload, 20000);
+                        console.log('JSONP Success:', result);
+                        updateConnectionStatus('connected');
+                        connectionAttempts = 0;
                         return result;
-                    } else {
-                        throw new Error(`Both POST and GET failed`);
+                    } catch (jsonpError) {
+                        console.log('JSONP failed:', jsonpError.message);
+                    }
+                }
+                
+                // Strategy 2: POST with form data
+                if (!preferJSONP || ['create', 'update', 'delete', 'exportData'].includes(action)) {
+                    try {
+                        console.log('Trying POST...');
+                        const formData = new URLSearchParams();
+                        Object.keys(payload).forEach(key => {
+                            const value = payload[key];
+                            if (typeof value === 'object' && value !== null) {
+                                formData.append(key, JSON.stringify(value));
+                            } else {
+                                formData.append(key, String(value || ''));
+                            }
+                        });
+
+                        const result = await fallbackFetch(API_URL, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        console.log('POST Success:', result);
+                        updateConnectionStatus('connected');
+                        connectionAttempts = 0;
+                        return result;
+                    } catch (postError) {
+                        console.log('POST failed:', postError.message);
+                    }
+                }
+                
+                // Strategy 3: GET with query parameters
+                try {
+                    console.log('Trying GET...');
+                    const queryParams = new URLSearchParams();
+                    Object.keys(jsonpPayload).forEach(key => {
+                        queryParams.append(key, jsonpPayload[key]);
+                    });
+                    
+                    const getUrl = `${API_URL}?${queryParams.toString()}`;
+                    const result = await fallbackFetch(getUrl, { method: 'GET' });
+                    
+                    console.log('GET Success:', result);
+                    updateConnectionStatus('connected');
+                    connectionAttempts = 0;
+                    return result;
+                } catch (getError) {
+                    console.log('GET failed:', getError.message);
+                }
+                
+                // Strategy 4: JSONP ย้อนกลับ (สำหรับ actions อื่นๆ)
+                if (!preferJSONP) {
+                    try {
+                        console.log('Trying fallback JSONP...');
+                        const result = await createJSONPRequest(API_URL, jsonpPayload, 15000);
+                        console.log('Fallback JSONP Success:', result);
+                        updateConnectionStatus('connected');
+                        connectionAttempts = 0;
+                        return result;
+                    } catch (jsonpError) {
+                        console.log('Fallback JSONP failed:', jsonpError.message);
                     }
                 }
 
+                // ถ้าทุกวิธีล้มเหลว
+                throw new Error('All connection methods failed');
+
             } catch (error) {
                 console.error('API Error:', error);
+                connectionAttempts++;
+                updateConnectionStatus('disconnected');
+                
                 return {
                     success: false,
                     error: error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อ'
                 };
+            }
+        }
+
+        // Connection status management
+        function updateConnectionStatus(status) {
+            const statusElement = document.getElementById('connectionStatus');
+            if (!statusElement) return;
+            
+            const indicator = statusElement.querySelector('.status-indicator');
+            
+            statusElement.className = `connection-status ${status}`;
+            if (indicator) {
+                indicator.className = `status-indicator ${status}`;
+            }
+            
+            switch (status) {
+                case 'connected':
+                    statusElement.innerHTML = '<span class="status-indicator connected"></span>เชื่อมต่อแล้ว';
+                    break;
+                case 'disconnected':
+                    statusElement.innerHTML = '<span class="status-indicator disconnected"></span>ไม่สามารถเชื่อมต่อได้';
+                    break;
+                case 'checking':
+                    statusElement.innerHTML = '<span class="status-indicator checking"></span>กำลังตรวจสอบการเชื่อมต่อ...';
+                    break;
             }
         }
 
@@ -1442,12 +1991,16 @@
             const loading = document.getElementById('loading');
             const submitBtn = document.getElementById('submitBtn');
             
-            if (show) {
-                loading.classList.add('show');
-                if (submitBtn) submitBtn.disabled = true;
-            } else {
-                loading.classList.remove('show');
-                if (submitBtn) submitBtn.disabled = false;
+            if (loading) {
+                if (show) {
+                    loading.classList.add('show');
+                } else {
+                    loading.classList.remove('show');
+                }
+            }
+            
+            if (submitBtn) {
+                submitBtn.disabled = show;
             }
         }
 
@@ -1457,7 +2010,9 @@
                 text: message,
                 icon: type,
                 confirmButtonText: 'ตกลง',
-                confirmButtonColor: '#e91e63'
+                confirmButtonColor: '#e91e63',
+                timer: type === 'success' ? 3000 : undefined,
+                timerProgressBar: type === 'success'
             });
         }
 
@@ -1523,492 +2078,468 @@
             }
         }
 
-        // Load database names
+        // Load database names with retry
         async function loadDatabaseNames() {
             try {
+                console.log('Loading database names...');
                 const result = await callAPI('getDatabaseNames');
                 if (result && result.success) {
                     databaseNames = result.data || [];
+                    console.log('Database names loaded:', databaseNames.length, 'records');
                 } else {
                     console.error('Failed to load database names:', result ? result.error : 'Unknown error');
-                    databaseNames = []; // Fallback to empty array
-                }
-            } catch (error) {
-                console.error('Error loading database names:', error);
-                databaseNames = []; // Fallback to empty array
-            }
-        }
-
-        // Check connection status
-        async function checkConnectionStatus() {
-            try {
-                const result = await callAPI('test');
-                const statusElement = document.getElementById('connectionStatus');
-                
-                if (statusElement) {
-                    if (result && result.success) {
-                        statusElement.textContent = 'เชื่อมต่อแล้ว';
-                        statusElement.style.color = 'var(--success-color)';
-                    } else {
-                        statusElement.textContent = 'ไม่สามารถเชื่อมต่อได้';
-                        statusElement.style.color = 'var(--error-color)';
+                    databaseNames = [];
+                    
+                    // แสดงข้อความแจ้งเตือนถ้าไม่สามารถโหลดได้
+                    if (connectionAttempts > maxConnectionAttempts) {
+                        showMessage('ไม่สามารถโหลดฐานข้อมูลชื่อได้ ระบบยังคงใช้งานได้แต่อาจมีข้อจำกัดบางอย่าง', 'warning');
                     }
                 }
             } catch (error) {
-                const statusElement = document.getElementById('connectionStatus');
-                if (statusElement) {
-                    statusElement.textContent = 'ไม่สามารถเชื่อมต่อได้';
-                    statusElement.style.color = 'var(--error-color)';
+                console.error('Error loading database names:', error);
+                databaseNames = [];
+            }
+        }
+
+        // Check connection status with all methods
+        async function checkConnectionStatus() {
+            try {
+                console.log('Checking connection status...');
+                // ทดสอบ JSONP ก่อน
+                const result = await callAPI('test', {}, true);
+                
+                if (result && result.success) {
+                    updateConnectionStatus('connected');
+                    console.log('Connection test successful:', result);
+                    return true;
+                } else {
+                    updateConnectionStatus('disconnected');
+                    console.error('Connection test failed:', result);
+                    return false;
                 }
+            } catch (error) {
+                updateConnectionStatus('disconnected');
+                console.error('Connection test error:', error);
+                return false;
             }
         }
 
         // Navigation functions
         function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-            }
-            
-            // Update nav buttons
-            document.querySelectorAll('.nav-tab').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Find and activate the clicked button
-            const clickedButton = Array.from(document.querySelectorAll('.nav-tab')).find(btn => 
-                btn.onclick && btn.onclick.toString().includes(tabName)
-            );
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
+            try {
+                // Hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Show selected tab
+                const selectedTab = document.getElementById(tabName);
+                if (selectedTab) {
+                    selectedTab.classList.add('active');
+                }
+                
+                // Update nav buttons
+                document.querySelectorAll('.nav-tab').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Find and activate the clicked button
+                const clickedButton = Array.from(document.querySelectorAll('.nav-tab')).find(btn => 
+                    btn.onclick && btn.onclick.toString().includes(tabName)
+                );
+                if (clickedButton) {
+                    clickedButton.classList.add('active');
+                }
 
-            // Load data when switching tabs
-            if (tabName === 'view') {
-                loadViewData();
-            } else if (tabName === 'dashboard') {
-                loadDashboardData();
+                // Load data when switching tabs
+                if (tabName === 'view') {
+                    loadViewData();
+                } else if (tabName === 'dashboard') {
+                    loadDashboardData();
+                }
+            } catch (error) {
+                console.error('Error in showTab:', error);
             }
         }
 
         // Form handling functions
         function selectRadio(radioId) {
-            const radioElement = document.getElementById(radioId);
-            if (radioElement) {
-                radioElement.checked = true;
-                
-                // Trigger change event
-                const event = new Event('change');
-                radioElement.dispatchEvent(event);
+            try {
+                const radioElement = document.getElementById(radioId);
+                if (radioElement) {
+                    radioElement.checked = true;
+                    
+                    // Trigger change event
+                    const event = new Event('change');
+                    radioElement.dispatchEvent(event);
+                }
+            } catch (error) {
+                console.error('Error in selectRadio:', error);
             }
         }
 
         function toggleSpecializedCourse() {
-            const hasSpecialized = document.querySelector('input[name="hasSpecializedCourse"]:checked');
-            const section = document.getElementById('specializedCourseSection');
-            
-            if (hasSpecialized && hasSpecialized.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
+            try {
+                const hasSpecialized = document.querySelector('input[name="hasSpecializedCourse"]:checked');
+                const section = document.getElementById('specializedCourseSection');
+                
+                if (hasSpecialized && hasSpecialized.value === 'เรียน') {
+                    section.classList.remove('hidden');
+                    section.classList.add('show');
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('show');
+                }
+            } catch (error) {
+                console.error('Error in toggleSpecializedCourse:', error);
             }
         }
 
         function togglePreceptorCourse() {
-            const hasPreceptor = document.querySelector('input[name="hasPreceptorCourse"]:checked');
-            const section = document.getElementById('preceptorCourseSection');
-            
-            if (hasPreceptor && hasPreceptor.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
+            try {
+                const hasPreceptor = document.querySelector('input[name="hasPreceptorCourse"]:checked');
+                const section = document.getElementById('preceptorCourseSection');
+                
+                if (hasPreceptor && hasPreceptor.value === 'เรียน') {
+                    section.classList.remove('hidden');
+                    section.classList.add('show');
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('show');
+                }
+            } catch (error) {
+                console.error('Error in togglePreceptorCourse:', error);
             }
         }
 
         function toggleMastersDegree() {
-            const hasMasters = document.querySelector('input[name="hasMastersDegree"]:checked');
-            const section = document.getElementById('mastersDegreeSection');
-            
-            if (hasMasters && hasMasters.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
+            try {
+                const hasMasters = document.querySelector('input[name="hasMastersDegree"]:checked');
+                const section = document.getElementById('mastersDegreeSection');
+                
+                if (hasMasters && hasMasters.value === 'เรียน') {
+                    section.classList.remove('hidden');
+                    section.classList.add('show');
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('show');
+                }
+            } catch (error) {
+                console.error('Error in toggleMastersDegree:', error);
             }
         }
 
         function toggleDoctoralDegree() {
-            const hasDoctoral = document.querySelector('input[name="hasDoctoralDegree"]:checked');
-            const section = document.getElementById('doctoralDegreeSection');
-            
-            if (hasDoctoral && hasDoctoral.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
+            try {
+                const hasDoctoral = document.querySelector('input[name="hasDoctoralDegree"]:checked');
+                const section = document.getElementById('doctoralDegreeSection');
+                
+                if (hasDoctoral && hasDoctoral.value === 'เรียน') {
+                    section.classList.remove('hidden');
+                    section.classList.add('show');
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('show');
+                }
+            } catch (error) {
+                console.error('Error in toggleDoctoralDegree:', error);
             }
         }
 
         // Course management functions
         function addSpecializedCourse() {
-            const courseList = document.getElementById('specializedCourseList');
-            const newCourse = document.createElement('div');
-            newCourse.className = 'course-item';
-            newCourse.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">ชื่อหลักสูตร</label>
-                    <input class="form-input" type="text" name="specializedCourseName[]" placeholder="กรอกชื่อหลักสูตร">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">สถาบัน</label>
-                    <input class="form-input" type="text" name="specializedInstitution[]" placeholder="กรอกชื่อสถาบัน">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="specializedGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeSpecializedCourse(this)" title="ลบหลักสูตร">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            courseList.appendChild(newCourse);
-            updateDeleteButtons('specializedCourseList');
+            try {
+                const courseList = document.getElementById('specializedCourseList');
+                const newCourse = document.createElement('div');
+                newCourse.className = 'course-item fade-in';
+                newCourse.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">ชื่อหลักสูตร</label>
+                        <input class="form-input" type="text" name="specializedCourseName[]" placeholder="กรอกชื่อหลักสูตร">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">สถาบัน</label>
+                        <input class="form-input" type="text" name="specializedInstitution[]" placeholder="กรอกชื่อสถาบัน">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ปีที่จบ</label>
+                        <input class="form-input" type="text" name="specializedGraduationYear[]" placeholder="กรอกปีที่จบ">
+                    </div>
+                    <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeSpecializedCourse(this)" title="ลบหลักสูตร">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                courseList.appendChild(newCourse);
+                updateDeleteButtons('specializedCourseList');
+            } catch (error) {
+                console.error('Error in addSpecializedCourse:', error);
+            }
         }
 
         function removeSpecializedCourse(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('specializedCourseList');
+            try {
+                button.closest('.course-item').remove();
+                updateDeleteButtons('specializedCourseList');
+            } catch (error) {
+                console.error('Error in removeSpecializedCourse:', error);
+            }
         }
 
         function addPreceptorCourse() {
-            const courseList = document.getElementById('preceptorCourseList');
-            const newCourse = document.createElement('div');
-            newCourse.className = 'course-item';
-            newCourse.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">ระยะเวลาเรียน</label>
-                    <input class="form-input" type="text" name="preceptorDuration[]" placeholder="เช่น 40 ชั่วโมง">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="preceptorGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removePreceptorCourse(this)" title="ลบหลักสูตร">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            courseList.appendChild(newCourse);
-            updateDeleteButtons('preceptorCourseList');
+            try {
+                const courseList = document.getElementById('preceptorCourseList');
+                const newCourse = document.createElement('div');
+                newCourse.className = 'course-item fade-in';
+                newCourse.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">ระยะเวลาเรียน</label>
+                        <input class="form-input" type="text" name="preceptorDuration[]" placeholder="เช่น 40 ชั่วโมง">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ปีที่จบ</label>
+                        <input class="form-input" type="text" name="preceptorGraduationYear[]" placeholder="กรอกปีที่จบ">
+                    </div>
+                    <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removePreceptorCourse(this)" title="ลบหลักสูตร">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                courseList.appendChild(newCourse);
+                updateDeleteButtons('preceptorCourseList');
+            } catch (error) {
+                console.error('Error in addPreceptorCourse:', error);
+            }
         }
 
         function removePreceptorCourse(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('preceptorCourseList');
+            try {
+                button.closest('.course-item').remove();
+                updateDeleteButtons('preceptorCourseList');
+            } catch (error) {
+                console.error('Error in removePreceptorCourse:', error);
+            }
         }
 
         function addMastersDegree() {
-            const degreeList = document.getElementById('mastersDegreeList');
-            const newDegree = document.createElement('div');
-            newDegree.className = 'course-item';
-            newDegree.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">สาขา</label>
-                    <input class="form-input" type="text" name="mastersMajor[]" placeholder="กรอกสาขาวิชา">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">สถาบัน</label>
-                    <input class="form-input" type="text" name="mastersInstitution[]" placeholder="กรอกชื่อสถาบัน">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="mastersGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ประเภทการศึกษา</label>
-                    <div class="tooltip-container">
-                        <select class="form-select" name="mastersEducationType[]">
-                            <option value="">เลือกประเภทการศึกษา</option>
-                            <option value="ภาคในเวลาราชการ">ภาคในเวลาราชการ</option>
-                            <option value="ภาคนอกเวลาราชการ">ภาคนอกเวลาราชการ</option>
-                        </select>
-                        <div class="tooltip-info">
-                            <i class="fas fa-info-circle" title="ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา"></i>
+            try {
+                const degreeList = document.getElementById('mastersDegreeList');
+                const newDegree = document.createElement('div');
+                newDegree.className = 'course-item fade-in';
+                newDegree.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">สาขา</label>
+                        <input class="form-input" type="text" name="mastersMajor[]" placeholder="กรอกสาขาวิชา">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">สถาบัน</label>
+                        <input class="form-input" type="text" name="mastersInstitution[]" placeholder="กรอกชื่อสถาบัน">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ปีที่จบ</label>
+                        <input class="form-input" type="text" name="mastersGraduationYear[]" placeholder="กรอกปีที่จบ">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ประเภทการศึกษา</label>
+                        <div class="tooltip-container">
+                            <select class="form-select" name="mastersEducationType[]">
+                                <option value="">เลือกประเภทการศึกษา</option>
+                                <option value="ภาคในเวลาราชการ">ภาคในเวลาราชการ</option>
+                                <option value="ภาคนอกเวลาราชการ">ภาคนอกเวลาราชการ</option>
+                            </select>
+                            <div class="tooltip-info">
+                                <i class="fas fa-info-circle" title="ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ทุนการศึกษา</label>
-                    <div class="input-container">
-                        <select class="form-select" name="mastersScholarship[]" onchange="toggleScholarshipOther(this)">
-                            <option value="">เลือกทุนการศึกษา</option>
-                            <option value="ทุนกรมการแพทย์">ทุนกรมการแพทย์</option>
-                            <option value="ทุนรพ.ราชวิถี">ทุนรพ.ราชวิถี</option>
-                            <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
-                            <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
-                        </select>
-                        <input class="form-input mt-1 hidden" name="mastersScholarshipOther[]" placeholder="ระบุทุนอื่นๆ">
+                    <div class="form-group">
+                        <label class="form-label">ทุนการศึกษา</label>
+                        <div class="input-container">
+                            <select class="form-select" name="mastersScholarship[]" onchange="toggleScholarshipOther(this)">
+                                <option value="">เลือกทุนการศึกษา</option>
+                                <option value="ทุนกรมการแพทย์">ทุนกรมการแพทย์</option>
+                                <option value="ทุนรพ.ราชวิถี">ทุนรพ.ราชวิถี</option>
+                                <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
+                                <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
+                            </select>
+                            <input class="form-input mt-1 hidden" name="mastersScholarshipOther[]" placeholder="ระบุทุนอื่นๆ">
+                        </div>
                     </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeMastersDegree(this)" title="ลบสาขา">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            degreeList.appendChild(newDegree);
-            updateDeleteButtons('mastersDegreeList');
+                    <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeMastersDegree(this)" title="ลบสาขา">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                degreeList.appendChild(newDegree);
+                updateDeleteButtons('mastersDegreeList');
+            } catch (error) {
+                console.error('Error in addMastersDegree:', error);
+            }
         }
 
         function removeMastersDegree(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('mastersDegreeList');
+            try {
+                button.closest('.course-item').remove();
+                updateDeleteButtons('mastersDegreeList');
+            } catch (error) {
+                console.error('Error in removeMastersDegree:', error);
+            }
         }
 
         function addDoctoralDegree() {
-            const degreeList = document.getElementById('doctoralDegreeList');
-            const newDegree = document.createElement('div');
-            newDegree.className = 'course-item';
-            newDegree.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">สาขา</label>
-                    <input class="form-input" type="text" name="doctoralMajor[]" placeholder="กรอกสาขาวิชา">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">สถาบัน</label>
-                    <input class="form-input" type="text" name="doctoralInstitution[]" placeholder="กรอกชื่อสถาบัน">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="doctoralGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ประเภทการศึกษา</label>
-                    <div class="tooltip-container">
-                        <select class="form-select" name="doctoralEducationType[]">
-                            <option value="">เลือกประเภทการศึกษา</option>
-                            <option value="ภาคในเวลาราชการ">ภาคในเวลาราชการ</option>
-                            <option value="ภาคนอกเวลาราชการ">ภาคนอกเวลาราชการ</option>
-                        </select>
-                        <div class="tooltip-info">
-                            <i class="fas fa-info-circle" title="ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา"></i>
+            try {
+                const degreeList = document.getElementById('doctoralDegreeList');
+                const newDegree = document.createElement('div');
+                newDegree.className = 'course-item fade-in';
+                newDegree.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">สาขา</label>
+                        <input class="form-input" type="text" name="doctoralMajor[]" placeholder="กรอกสาขาวิชา">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">สถาบัน</label>
+                        <input class="form-input" type="text" name="doctoralInstitution[]" placeholder="กรอกชื่อสถาบัน">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ปีที่จบ</label>
+                        <input class="form-input" type="text" name="doctoralGraduationYear[]" placeholder="กรอกปีที่จบ">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ประเภทการศึกษา</label>
+                        <div class="tooltip-container">
+                            <select class="form-select" name="doctoralEducationType[]">
+                                <option value="">เลือกประเภทการศึกษา</option>
+                                <option value="ภาคในเวลาราชการ">ภาคในเวลาราชการ</option>
+                                <option value="ภาคนอกเวลาราชการ">ภาคนอกเวลาราชการ</option>
+                            </select>
+                            <div class="tooltip-info">
+                                <i class="fas fa-info-circle" title="ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ทุนการศึกษา</label>
-                    <div class="input-container">
-                        <select class="form-select" name="doctoralScholarship[]" onchange="toggleScholarshipOther(this)">
-                            <option value="">เลือกทุนการศึกษา</option>
-                            <option value="ทุนกรมการแพทย์">ทุนกรมการแพทย์</option>
-                            <option value="ทุนรพ.ราชวิถี">ทุนรพ.ราชวิถี</option>
-                            <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
-                            <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
-                        </select>
-                        <input class="form-input mt-1 hidden" name="doctoralScholarshipOther[]" placeholder="ระบุทุนอื่นๆ">
+                    <div class="form-group">
+                        <label class="form-label">ทุนการศึกษา</label>
+                        <div class="input-container">
+                            <select class="form-select" name="doctoralScholarship[]" onchange="toggleScholarshipOther(this)">
+                                <option value="">เลือกทุนการศึกษา</option>
+                                <option value="ทุนกรมการแพทย์">ทุนกรมการแพทย์</option>
+                                <option value="ทุนรพ.ราชวิถี">ทุนรพ.ราชวิถี</option>
+                                <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
+                                <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
+                            </select>
+                            <input class="form-input mt-1 hidden" name="doctoralScholarshipOther[]" placeholder="ระบุทุนอื่นๆ">
+                        </div>
                     </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeDoctoralDegree(this)" title="ลบสาขา">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            degreeList.appendChild(newDegree);
-            updateDeleteButtons('doctoralDegreeList');
+                    <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeDoctoralDegree(this)" title="ลบสาขา">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                degreeList.appendChild(newDegree);
+                updateDeleteButtons('doctoralDegreeList');
+            } catch (error) {
+                console.error('Error in addDoctoralDegree:', error);
+            }
         }
 
         function removeDoctoralDegree(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('doctoralDegreeList');
+            try {
+                button.closest('.course-item').remove();
+                updateDeleteButtons('doctoralDegreeList');
+            } catch (error) {
+                console.error('Error in removeDoctoralDegree:', error);
+            }
         }
 
         function updateDeleteButtons(listId) {
-            const list = document.getElementById(listId);
-            if (!list) return;
-            
-            const items = list.querySelectorAll('.course-item');
-            
-            items.forEach((item, index) => {
-                const deleteBtn = item.querySelector('.delete-btn');
-                if (deleteBtn) {
-                    if (items.length === 1) {
-                        deleteBtn.classList.add('hidden');
-                    } else {
-                        deleteBtn.classList.remove('hidden');
+            try {
+                const list = document.getElementById(listId);
+                if (!list) return;
+                
+                const items = list.querySelectorAll('.course-item');
+                
+                items.forEach((item, index) => {
+                    const deleteBtn = item.querySelector('.delete-btn');
+                    if (deleteBtn) {
+                        if (items.length === 1) {
+                            deleteBtn.classList.add('hidden');
+                        } else {
+                            deleteBtn.classList.remove('hidden');
+                        }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                console.error('Error in updateDeleteButtons:', error);
+            }
         }
 
         function toggleScholarshipOther(selectElement) {
-            const otherInput = selectElement.parentNode.querySelector('input[name*="ScholarshipOther"]');
-            if (otherInput) {
-                if (selectElement.value === 'อื่นๆ') {
-                    otherInput.classList.remove('hidden');
-                    otherInput.required = true;
-                } else {
-                    otherInput.classList.add('hidden');
-                    otherInput.required = false;
-                    otherInput.value = '';
-                }
-            }
-        }
-
-        // Data management functions - placeholder implementations
-        async function loadViewData() {
-            console.log('Loading view data...');
-            // Implementation will be added when needed
-        }
-
-        async function loadDashboardData() {
-            console.log('Loading dashboard data...');
-            // Implementation will be added when needed
-        }
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing app...');
-            
-            // Form submission
-            const educationForm = document.getElementById('educationForm');
-            if (educationForm) {
-                educationForm.addEventListener('submit', submitForm);
-            }
-            
-            // Birth date change event
-            const birthDateInput = document.getElementById('birthDate');
-            if (birthDateInput) {
-                birthDateInput.addEventListener('change', function() {
-                    const birthDate = this.value;
-                    if (birthDate) {
-                        const retirementDate = calculateRetirementDate(birthDate);
-                        const remainingTime = calculateRemainingTime(retirementDate);
-                        
-                        const retirementDisplay = document.getElementById('retirementDisplay');
-                        const remainingTimeDisplay = document.getElementById('remainingTimeDisplay');
-                        
-                        if (retirementDisplay) retirementDisplay.textContent = retirementDate;
-                        if (remainingTimeDisplay) remainingTimeDisplay.textContent = remainingTime;
+            try {
+                const otherInput = selectElement.parentNode.querySelector('input[name*="ScholarshipOther"]');
+                if (otherInput) {
+                    if (selectElement.value === 'อื่นๆ') {
+                        otherInput.classList.remove('hidden');
+                        otherInput.required = true;
                     } else {
-                        const retirementDisplay = document.getElementById('retirementDisplay');
-                        const remainingTimeDisplay = document.getElementById('remainingTimeDisplay');
-                        
-                        if (retirementDisplay) retirementDisplay.textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
-                        if (remainingTimeDisplay) remainingTimeDisplay.textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
+                        otherInput.classList.add('hidden');
+                        otherInput.required = false;
+                        otherInput.value = '';
                     }
-                });
+                }
+            } catch (error) {
+                console.error('Error in toggleScholarshipOther:', error);
             }
-            
-            // Other field change events
-            ['prefix', 'position', 'level'].forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.addEventListener('change', function() {
-                        const otherInput = document.getElementById(fieldId + 'Other');
-                        if (otherInput) {
-                            if (this.value === 'อื่นๆ') {
-                                otherInput.classList.remove('hidden');
-                                otherInput.required = true;
-                            } else {
-                                otherInput.classList.add('hidden');
-                                otherInput.required = false;
-                                otherInput.value = '';
-                            }
+        }
+
+        // Name suggestion functions
+        function showNameSuggestions(inputElement, suggestions, field) {
+            try {
+                const suggestionsContainer = inputElement.nextElementSibling;
+                if (!suggestionsContainer || !suggestionsContainer.classList.contains('name-suggestions')) return;
+                
+                suggestionsContainer.innerHTML = '';
+                
+                if (suggestions.length === 0) {
+                    suggestionsContainer.style.display = 'none';
+                    return;
+                }
+                
+                suggestions.slice(0, 10).forEach(item => { // จำกัดเฉพาะ 10 รายการแรก
+                    const suggestionElement = document.createElement('div');
+                    suggestionElement.className = 'name-suggestion-item';
+                    suggestionElement.textContent = item[field];
+                    suggestionElement.onclick = () => {
+                        inputElement.value = item[field];
+                        suggestionsContainer.style.display = 'none';
+                        
+                        // Auto-fill related fields
+                        if (field === 'firstName' || field === 'lastName') {
+                            const departmentInput = document.getElementById('department');
+                            const workInput = document.getElementById('work');
+                            const workGroupInput = document.getElementById('workGroup');
+                            
+                            if (departmentInput) departmentInput.value = item.department || '';
+                            if (workInput) workInput.value = item.work || '';
+                            if (workGroupInput) workGroupInput.value = item.workGroup || '';
                         }
-                    });
-                }
-            });
-            
-            // Name input events
-            const firstNameInput = document.getElementById('firstName');
-            if (firstNameInput) {
-                firstNameInput.addEventListener('input', function() {
-                    const value = this.value.toLowerCase();
-                    if (value.length > 1) {
-                        const suggestions = databaseNames.filter(item => 
-                            item.firstName && item.firstName.toLowerCase().includes(value)
-                        );
-                        showNameSuggestions(this, suggestions, 'firstName');
-                    } else {
-                        hideNameSuggestions(this);
-                    }
+                    };
+                    suggestionsContainer.appendChild(suggestionElement);
                 });
                 
-                firstNameInput.addEventListener('blur', function() {
-                    hideNameSuggestions(this);
-                });
+                suggestionsContainer.style.display = 'block';
+            } catch (error) {
+                console.error('Error in showNameSuggestions:', error);
             }
-            
-            const lastNameInput = document.getElementById('lastName');
-            if (lastNameInput) {
-                lastNameInput.addEventListener('input', function() {
-                    const value = this.value.toLowerCase();
-                    if (value.length > 1) {
-                        const suggestions = databaseNames.filter(item => 
-                            item.lastName && item.lastName.toLowerCase().includes(value)
-                        );
-                        showNameSuggestions(this, suggestions, 'lastName');
-                    } else {
-                        hideNameSuggestions(this);
+        }
+
+        function hideNameSuggestions(inputElement) {
+            try {
+                setTimeout(() => {
+                    const suggestionsContainer = inputElement.nextElementSibling;
+                    if (suggestionsContainer && suggestionsContainer.classList.contains('name-suggestions')) {
+                        suggestionsContainer.style.display = 'none';
                     }
-                });
-                
-                lastNameInput.addEventListener('blur', function() {
-                    hideNameSuggestions(this);
-                });
+                }, 200);
+            } catch (error) {
+                console.error('Error in hideNameSuggestions:', error);
             }
-            
-            // Search input for view tab
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase();
-                    filteredData = allData.filter(item => {
-                        const fullName = `${item.firstName} ${item.lastName}`.toLowerCase();
-                        return fullName.includes(searchTerm) || 
-                               item.position.toLowerCase().includes(searchTerm) ||
-                               item.department.toLowerCase().includes(searchTerm);
-                    });
-                    currentPage = 1;
-                    displayData();
-                });
-            }
-            
-            // Click outside to hide suggestions
-            document.addEventListener('click', function(event) {
-                const suggestions = document.querySelectorAll('.name-suggestions');
-                suggestions.forEach(suggestion => {
-                    if (!suggestion.contains(event.target) && !suggestion.previousElementSibling.contains(event.target)) {
-                        suggestion.style.display = 'none';
-                    }
-                });
-            });
-            
-            // Set current year for dashboard
-            const currentYear = new Date().getFullYear() + 543;
-            const dashboardYearSelect = document.getElementById('dashboardYear');
-            if (dashboardYearSelect) {
-                dashboardYearSelect.value = currentYear.toString();
-            }
-            
-            // Initialize delete button visibility
-            updateDeleteButtons('specializedCourseList');
-            updateDeleteButtons('preceptorCourseList');
-            updateDeleteButtons('mastersDegreeList');
-            updateDeleteButtons('doctoralDegreeList');
-            
-            // Load initial data
-            loadDatabaseNames();
-            checkConnectionStatus();
-        });
+        }
 
         // Form submission function
         async function submitForm(event) {
@@ -2124,11 +2655,15 @@
                 }
                 data.doctoralDegrees = doctoralDegrees;
                 
-                // Submit to API
-                const result = await callAPI('create', data);
+                console.log('Submitting data:', data);
+                
+                // Submit to API using POST (ไม่ใช้ JSONP สำหรับการส่งข้อมูล)
+                const result = await callAPI('create', data, false);
                 
                 if (result && result.success) {
                     showMessage('บันทึกข้อมูลการศึกษาสำเร็จ!', 'success');
+                    
+                    // Reset form
                     event.target.reset();
                     
                     // Reset course sections
@@ -2147,572 +2682,20 @@
                     
                     if (retirementDisplay) retirementDisplay.textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
                     if (remainingTimeDisplay) remainingTimeDisplay.textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
+                    
+                    // Reset radio buttons
+                    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.checked = false;
+                    });
+                    
                 } else {
-                    showMessage(result ? result.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' : 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
+                    const errorMessage = result ? result.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' : 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
+                    showMessage(errorMessage, 'error');
                 }
                 
             } catch (error) {
                 console.error('Form submission error:', error);
-                showMessage('เกิดข้อผิดพลาดในการส่งข้อมูล', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // Name suggestion functions
-        function showNameSuggestions(inputElement, suggestions, field) {
-            const suggestionsContainer = inputElement.nextElementSibling;
-            if (!suggestionsContainer || !suggestionsContainer.classList.contains('name-suggestions')) return;
-            
-            suggestionsContainer.innerHTML = '';
-            
-            if (suggestions.length === 0) {
-                suggestionsContainer.style.display = 'none';
-                return;
-            }
-            
-            suggestions.forEach(item => {
-                const suggestionElement = document.createElement('div');
-                suggestionElement.className = 'name-suggestion-item';
-                suggestionElement.textContent = item[field];
-                suggestionElement.onclick = () => {
-                    inputElement.value = item[field];
-                    suggestionsContainer.style.display = 'none';
-                    
-                    // Auto-fill related fields
-                    if (field === 'firstName' || field === 'lastName') {
-                        const departmentInput = document.getElementById('department');
-                        const workInput = document.getElementById('work');
-                        const workGroupInput = document.getElementById('workGroup');
-                        
-                        if (departmentInput) departmentInput.value = item.department || '';
-                        if (workInput) workInput.value = item.work || '';
-                        if (workGroupInput) workGroupInput.value = item.workGroup || '';
-                    }
-                };
-                suggestionsContainer.appendChild(suggestionElement);
-            });
-            
-            suggestionsContainer.style.display = 'block';
-        }
-
-        function hideNameSuggestions(inputElement) {
-            setTimeout(() => {
-                const suggestionsContainer = inputElement.nextElementSibling;
-                if (suggestionsContainer && suggestionsContainer.classList.contains('name-suggestions')) {
-                    suggestionsContainer.style.display = 'none';
-                }
-            }, 200);
-        }
-
-        // Placeholder functions for data management
-        function displayData() {
-            console.log('Display data called');
-        }
-
-        function previousPage() {
-            console.log('Previous page called');
-        }
-
-        function nextPage() {
-            console.log('Next page called');
-        }
-
-        function showDetail(id) {
-            console.log('Show detail called for ID:', id);
-        }
-
-        function requestEdit(id) {
-            console.log('Request edit called for ID:', id);
-        }
-
-        function deleteRecord(id) {
-            console.log('Delete record called for ID:', id);
-        }
-
-        function exportData(format) {
-            console.log('Export data called with format:', format);
-        }
-
-        function toggleSearchFields() {
-            console.log('Toggle search fields called');
-        }
-
-        function performSearch() {
-            console.log('Perform search called');
-        }
-
-        // Navigation functions
-        function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-            }
-            
-            // Update nav buttons
-            document.querySelectorAll('.nav-tab').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Find and activate the clicked button
-            const clickedButton = Array.from(document.querySelectorAll('.nav-tab')).find(btn => 
-                btn.onclick && btn.onclick.toString().includes(tabName)
-            );
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
-
-            // Load data when switching tabs
-            if (tabName === 'view') {
-                loadViewData();
-            } else if (tabName === 'dashboard') {
-                loadDashboardData();
-            }
-        }
-
-        // Form handling functions
-        function selectRadio(radioId) {
-            document.getElementById(radioId).checked = true;
-            
-            // Trigger change event
-            const event = new Event('change');
-            document.getElementById(radioId).dispatchEvent(event);
-        }
-
-        function toggleSpecializedCourse() {
-            const hasSpecialized = document.querySelector('input[name="hasSpecializedCourse"]:checked');
-            const section = document.getElementById('specializedCourseSection');
-            
-            if (hasSpecialized && hasSpecialized.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
-            }
-        }
-
-        function togglePreceptorCourse() {
-            const hasPreceptor = document.querySelector('input[name="hasPreceptorCourse"]:checked');
-            const section = document.getElementById('preceptorCourseSection');
-            
-            if (hasPreceptor && hasPreceptor.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
-            }
-        }
-
-        function toggleMastersDegree() {
-            const hasMasters = document.querySelector('input[name="hasMastersDegree"]:checked');
-            const section = document.getElementById('mastersDegreeSection');
-            
-            if (hasMasters && hasMasters.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
-            }
-        }
-
-        function toggleDoctoralDegree() {
-            const hasDoctoral = document.querySelector('input[name="hasDoctoralDegree"]:checked');
-            const section = document.getElementById('doctoralDegreeSection');
-            
-            if (hasDoctoral && hasDoctoral.value === 'เรียน') {
-                section.classList.remove('hidden');
-                section.classList.add('show');
-            } else {
-                section.classList.add('hidden');
-                section.classList.remove('show');
-            }
-        }
-
-        // Course management functions
-        function addSpecializedCourse() {
-            const courseList = document.getElementById('specializedCourseList');
-            const newCourse = document.createElement('div');
-            newCourse.className = 'course-item';
-            newCourse.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">ชื่อหลักสูตร</label>
-                    <input class="form-input" type="text" name="specializedCourseName[]" placeholder="กรอกชื่อหลักสูตร">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">สถาบัน</label>
-                    <input class="form-input" type="text" name="specializedInstitution[]" placeholder="กรอกชื่อสถาบัน">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="specializedGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeSpecializedCourse(this)" title="ลบหลักสูตร">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            courseList.appendChild(newCourse);
-            updateDeleteButtons('specializedCourseList');
-        }
-
-        function removeSpecializedCourse(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('specializedCourseList');
-        }
-
-        function addPreceptorCourse() {
-            const courseList = document.getElementById('preceptorCourseList');
-            const newCourse = document.createElement('div');
-            newCourse.className = 'course-item';
-            newCourse.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">ระยะเวลาเรียน</label>
-                    <input class="form-input" type="text" name="preceptorDuration[]" placeholder="เช่น 40 ชั่วโมง">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="preceptorGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removePreceptorCourse(this)" title="ลบหลักสูตร">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            courseList.appendChild(newCourse);
-            updateDeleteButtons('preceptorCourseList');
-        }
-
-        function removePreceptorCourse(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('preceptorCourseList');
-        }
-
-        function addMastersDegree() {
-            const degreeList = document.getElementById('mastersDegreeList');
-            const newDegree = document.createElement('div');
-            newDegree.className = 'course-item';
-            newDegree.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">สาขา</label>
-                    <input class="form-input" type="text" name="mastersMajor[]" placeholder="กรอกสาขาวิชา">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">สถาบัน</label>
-                    <input class="form-input" type="text" name="mastersInstitution[]" placeholder="กรอกชื่อสถาบัน">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="mastersGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ประเภทการศึกษา</label>
-                    <div class="tooltip-container">
-                        <select class="form-select" name="mastersEducationType[]">
-                            <option value="">เลือกประเภทการศึกษา</option>
-                            <option value="ภาคในเวลาราชการ">ภาคในเวลาราชการ</option>
-                            <option value="ภาคนอกเวลาราชการ">ภาคนอกเวลาราชการ</option>
-                        </select>
-                        <div class="tooltip-info">
-                            <i class="fas fa-info-circle" title="ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ทุนการศึกษา</label>
-                    <div class="input-container">
-                        <select class="form-select" name="mastersScholarship[]" onchange="toggleScholarshipOther(this)">
-                            <option value="">เลือกทุนการศึกษา</option>
-                            <option value="ทุนกรมการแพทย์">ทุนกรมการแพทย์</option>
-                            <option value="ทุนรพ.ราชวิถี">ทุนรพ.ราชวิถี</option>
-                            <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
-                            <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
-                        </select>
-                        <input class="form-input mt-1 hidden" name="mastersScholarshipOther[]" placeholder="ระบุทุนอื่นๆ">
-                    </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeMastersDegree(this)" title="ลบสาขา">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            degreeList.appendChild(newDegree);
-            updateDeleteButtons('mastersDegreeList');
-        }
-
-        function removeMastersDegree(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('mastersDegreeList');
-        }
-
-        function addDoctoralDegree() {
-            const degreeList = document.getElementById('doctoralDegreeList');
-            const newDegree = document.createElement('div');
-            newDegree.className = 'course-item';
-            newDegree.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">สาขา</label>
-                    <input class="form-input" type="text" name="doctoralMajor[]" placeholder="กรอกสาขาวิชา">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">สถาบัน</label>
-                    <input class="form-input" type="text" name="doctoralInstitution[]" placeholder="กรอกชื่อสถาบัน">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ปีที่จบ</label>
-                    <input class="form-input" type="text" name="doctoralGraduationYear[]" placeholder="กรอกปีที่จบ">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ประเภทการศึกษา</label>
-                    <div class="tooltip-container">
-                        <select class="form-select" name="doctoralEducationType[]">
-                            <option value="">เลือกประเภทการศึกษา</option>
-                            <option value="ภาคในเวลาราชการ">ภาคในเวลาราชการ</option>
-                            <option value="ภาคนอกเวลาราชการ">ภาคนอกเวลาราชการ</option>
-                        </select>
-                        <div class="tooltip-info">
-                            <i class="fas fa-info-circle" title="ภาคในเวลาราชการ: เรียนโดยใช้ทุนส่วนตัว หรือใช้ทุน กองทุนสนับสนุนด้านวิชาการ กรมการแพทย์ โดยผ่านระบบการทำสัญญาลาศึกษา | ภาคนอกเวลาราชการ: ใช้ทุนส่วนตัวโดยไม่ได้ทำสัญญาลาศึกษา"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">ทุนการศึกษา</label>
-                    <div class="input-container">
-                        <select class="form-select" name="doctoralScholarship[]" onchange="toggleScholarshipOther(this)">
-                            <option value="">เลือกทุนการศึกษา</option>
-                            <option value="ทุนกรมการแพทย์">ทุนกรมการแพทย์</option>
-                            <option value="ทุนรพ.ราชวิถี">ทุนรพ.ราชวิถี</option>
-                            <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
-                            <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
-                        </select>
-                        <input class="form-input mt-1 hidden" name="doctoralScholarshipOther[]" placeholder="ระบุทุนอื่นๆ">
-                    </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-icon delete-btn" onclick="removeDoctoralDegree(this)" title="ลบสาขา">
-                    <i class="fas fa-trash"></i>
-                </button>
-            `;
-            degreeList.appendChild(newDegree);
-            updateDeleteButtons('doctoralDegreeList');
-        }
-
-        function removeDoctoralDegree(button) {
-            button.closest('.course-item').remove();
-            updateDeleteButtons('doctoralDegreeList');
-        }
-
-        function updateDeleteButtons(listId) {
-            const list = document.getElementById(listId);
-            const items = list.querySelectorAll('.course-item');
-            
-            items.forEach((item, index) => {
-                const deleteBtn = item.querySelector('.delete-btn');
-                if (deleteBtn) {
-                    if (items.length === 1) {
-                        deleteBtn.classList.add('hidden');
-                    } else {
-                        deleteBtn.classList.remove('hidden');
-                    }
-                }
-            });
-        }
-
-        function toggleScholarshipOther(selectElement) {
-            const otherInput = selectElement.parentNode.querySelector('input[name*="ScholarshipOther"]');
-            if (selectElement.value === 'อื่นๆ') {
-                otherInput.classList.remove('hidden');
-                otherInput.required = true;
-            } else {
-                otherInput.classList.add('hidden');
-                otherInput.required = false;
-                otherInput.value = '';
-            }
-        }
-
-        // Name suggestion functions
-        function showNameSuggestions(inputElement, suggestions, field) {
-            const suggestionsContainer = inputElement.nextElementSibling;
-            if (!suggestionsContainer || !suggestionsContainer.classList.contains('name-suggestions')) return;
-            
-            suggestionsContainer.innerHTML = '';
-            
-            if (suggestions.length === 0) {
-                suggestionsContainer.style.display = 'none';
-                return;
-            }
-            
-            suggestions.forEach(item => {
-                const suggestionElement = document.createElement('div');
-                suggestionElement.className = 'name-suggestion-item';
-                suggestionElement.textContent = item[field];
-                suggestionElement.onclick = () => {
-                    inputElement.value = item[field];
-                    suggestionsContainer.style.display = 'none';
-                    
-                    // Auto-fill related fields
-                    if (field === 'firstName' || field === 'lastName') {
-                        document.getElementById('department').value = item.department || '';
-                        document.getElementById('work').value = item.work || '';
-                        document.getElementById('workGroup').value = item.workGroup || '';
-                    }
-                };
-                suggestionsContainer.appendChild(suggestionElement);
-            });
-            
-            suggestionsContainer.style.display = 'block';
-        }
-
-        function hideNameSuggestions(inputElement) {
-            setTimeout(() => {
-                const suggestionsContainer = inputElement.nextElementSibling;
-                if (suggestionsContainer && suggestionsContainer.classList.contains('name-suggestions')) {
-                    suggestionsContainer.style.display = 'none';
-                }
-            }, 200);
-        }
-
-        // Form submission
-        async function submitForm(event) {
-            event.preventDefault();
-            
-            showLoading(true);
-            
-            try {
-                const formData = new FormData(event.target);
-                const data = {};
-                
-                // Basic fields
-                for (const [key, value] of formData.entries()) {
-                    if (!key.includes('[]')) {
-                        data[key] = value;
-                    }
-                }
-                
-                // Handle "other" fields
-                if (data.prefix === 'อื่นๆ') {
-                    data.prefix = data.prefixOther || '';
-                }
-                if (data.position === 'อื่นๆ') {
-                    data.position = data.positionOther || '';
-                }
-                if (data.level === 'อื่นๆ') {
-                    data.level = data.levelOther || '';
-                }
-                
-                // Handle specialized courses
-                const specializedCourses = [];
-                const specializedNames = formData.getAll('specializedCourseName[]');
-                const specializedInstitutions = formData.getAll('specializedInstitution[]');
-                const specializedYears = formData.getAll('specializedGraduationYear[]');
-                
-                for (let i = 0; i < specializedNames.length; i++) {
-                    if (specializedNames[i] || specializedInstitutions[i] || specializedYears[i]) {
-                        specializedCourses.push({
-                            courseName: specializedNames[i] || '',
-                            institution: specializedInstitutions[i] || '',
-                            graduationYear: specializedYears[i] || ''
-                        });
-                    }
-                }
-                data.specializedCourses = specializedCourses;
-                
-                // Handle preceptor courses
-                const preceptorCourses = [];
-                const preceptorDurations = formData.getAll('preceptorDuration[]');
-                const preceptorYears = formData.getAll('preceptorGraduationYear[]');
-                
-                for (let i = 0; i < preceptorDurations.length; i++) {
-                    if (preceptorDurations[i] || preceptorYears[i]) {
-                        preceptorCourses.push({
-                            duration: preceptorDurations[i] || '',
-                            graduationYear: preceptorYears[i] || ''
-                        });
-                    }
-                }
-                data.preceptorCourses = preceptorCourses;
-                
-                // Handle masters degrees
-                const mastersDegrees = [];
-                const mastersMajors = formData.getAll('mastersMajor[]');
-                const mastersInstitutions = formData.getAll('mastersInstitution[]');
-                const mastersYears = formData.getAll('mastersGraduationYear[]');
-                const mastersTypes = formData.getAll('mastersEducationType[]');
-                const mastersScholarships = formData.getAll('mastersScholarship[]');
-                const mastersScholarshipOthers = formData.getAll('mastersScholarshipOther[]');
-                
-                for (let i = 0; i < mastersMajors.length; i++) {
-                    if (mastersMajors[i] || mastersInstitutions[i] || mastersYears[i]) {
-                        let scholarship = mastersScholarships[i] || '';
-                        if (scholarship === 'อื่นๆ') {
-                            scholarship = mastersScholarshipOthers[i] || '';
-                        }
-                        
-                        mastersDegrees.push({
-                            major: mastersMajors[i] || '',
-                            institution: mastersInstitutions[i] || '',
-                            graduationYear: mastersYears[i] || '',
-                            educationType: mastersTypes[i] || '',
-                            scholarship: scholarship
-                        });
-                    }
-                }
-                data.mastersDegrees = mastersDegrees;
-                
-                // Handle doctoral degrees
-                const doctoralDegrees = [];
-                const doctoralMajors = formData.getAll('doctoralMajor[]');
-                const doctoralInstitutions = formData.getAll('doctoralInstitution[]');
-                const doctoralYears = formData.getAll('doctoralGraduationYear[]');
-                const doctoralTypes = formData.getAll('doctoralEducationType[]');
-                const doctoralScholarships = formData.getAll('doctoralScholarship[]');
-                const doctoralScholarshipOthers = formData.getAll('doctoralScholarshipOther[]');
-                
-                for (let i = 0; i < doctoralMajors.length; i++) {
-                    if (doctoralMajors[i] || doctoralInstitutions[i] || doctoralYears[i]) {
-                        let scholarship = doctoralScholarships[i] || '';
-                        if (scholarship === 'อื่นๆ') {
-                            scholarship = doctoralScholarshipOthers[i] || '';
-                        }
-                        
-                        doctoralDegrees.push({
-                            major: doctoralMajors[i] || '',
-                            institution: doctoralInstitutions[i] || '',
-                            graduationYear: doctoralYears[i] || '',
-                            educationType: doctoralTypes[i] || '',
-                            scholarship: scholarship
-                        });
-                    }
-                }
-                data.doctoralDegrees = doctoralDegrees;
-                
-                // Submit to API
-                const result = await callAPI('create', data);
-                
-                if (result.success) {
-                    showMessage('บันทึกข้อมูลการศึกษาสำเร็จ!', 'success');
-                    event.target.reset();
-                    
-                    // Reset course sections
-                    document.getElementById('specializedCourseSection').classList.add('hidden');
-                    document.getElementById('preceptorCourseSection').classList.add('hidden');
-                    document.getElementById('mastersDegreeSection').classList.add('hidden');
-                    document.getElementById('doctoralDegreeSection').classList.add('hidden');
-                    
-                    // Clear retirement displays
-                    document.getElementById('retirementDisplay').textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
-                    document.getElementById('remainingTimeDisplay').textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
-                } else {
-                    showMessage(result.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
-                }
-                
-            } catch (error) {
-                console.error('Form submission error:', error);
-                showMessage('เกิดข้อผิดพลาดในการส่งข้อมูล', 'error');
+                showMessage('เกิดข้อผิดพลาดในการส่งข้อมูล: ' + error.message, 'error');
             } finally {
                 showLoading(false);
             }
@@ -2721,64 +2704,104 @@
         // Data management functions
         async function loadViewData() {
             try {
+                console.log('Loading view data...');
                 const result = await callAPI('read');
-                if (result.success) {
+                if (result && result.success) {
                     allData = result.data || [];
                     filteredData = [...allData];
                     currentPage = 1;
                     displayData();
+                    console.log('View data loaded:', allData.length, 'records');
+                } else {
+                    console.error('Failed to load view data:', result ? result.error : 'Unknown error');
+                    displayNoData('ไม่สามารถโหลดข้อมูลได้');
                 }
             } catch (error) {
                 console.error('Error loading view data:', error);
+                displayNoData('เกิดข้อผิดพลาดในการโหลดข้อมูล');
             }
         }
 
         function displayData() {
+            try {
+                const tbody = document.getElementById('dataTableBody');
+                if (!tbody) return;
+                
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const pageData = filteredData.slice(startIndex, endIndex);
+                
+                if (pageData.length === 0) {
+                    displayNoData('ไม่พบข้อมูล');
+                } else {
+                    tbody.innerHTML = pageData.map((item, index) => `
+                        <tr>
+                            <td>${startIndex + index + 1}</td>
+                            <td>${item.prefix || ''} ${item.firstName || ''} ${item.lastName || ''}</td>
+                            <td>${item.position || ''}</td>
+                            <td>${item.department || ''}</td>
+                            <td style="text-align: center;">
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary" onclick="showDetail('${item.id || ''}')" title="ดูรายละเอียด">
+                                        <i class="fas fa-eye"></i> รายละเอียด
+                                    </button>
+                                    <button class="btn btn-warning" onclick="requestEdit('${item.id || ''}')" title="แก้ไขข้อมูล">
+                                        <i class="fas fa-edit"></i> แก้ไข
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteRecord('${item.id || ''}')" title="ลบข้อมูล">
+                                        <i class="fas fa-trash"></i> ลบ
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+                
+                // Update pagination info
+                updatePaginationInfo();
+                
+            } catch (error) {
+                console.error('Error in displayData:', error);
+                displayNoData('เกิดข้อผิดพลาดในการแสดงข้อมูล');
+            }
+        }
+
+        function displayNoData(message = 'ไม่พบข้อมูล') {
             const tbody = document.getElementById('dataTableBody');
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const pageData = filteredData.slice(startIndex, endIndex);
-            
-            if (pageData.length === 0) {
+            if (tbody) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-secondary);">
-                            <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                            ไม่พบข้อมูล
+                        <td colspan="5" class="no-data">
+                            <i class="fas fa-inbox"></i>
+                            ${message}
                         </td>
                     </tr>
                 `;
-            } else {
-                tbody.innerHTML = pageData.map((item, index) => `
-                    <tr style="border-bottom: 1px solid #f0f0f0;">
-                        <td style="padding: 1rem;">${startIndex + index + 1}</td>
-                        <td style="padding: 1rem;">${item.prefix} ${item.firstName} ${item.lastName}</td>
-                        <td style="padding: 1rem;">${item.position}</td>
-                        <td style="padding: 1rem;">${item.department}</td>
-                        <td style="padding: 1rem; text-align: center;">
-                            <button class="btn btn-primary" onclick="showDetail('${item.id}')" style="margin: 0.25rem; padding: 0.5rem 1rem; font-size: 0.9rem;">
-                                <i class="fas fa-eye"></i> รายละเอียด
-                            </button>
-                            <button class="btn btn-warning" onclick="requestEdit('${item.id}')" style="margin: 0.25rem; padding: 0.5rem 1rem; font-size: 0.9rem;">
-                                <i class="fas fa-edit"></i> แก้ไข
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteRecord('${item.id}')" style="margin: 0.25rem; padding: 0.5rem 1rem; font-size: 0.9rem;">
-                                <i class="fas fa-trash"></i> ลบ
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
             }
-            
-            // Update pagination info
-            document.getElementById('dataCount').textContent = filteredData.length;
-            document.getElementById('totalCount').textContent = allData.length;
-            document.getElementById('currentPage').textContent = currentPage;
-            document.getElementById('totalPages').textContent = Math.ceil(filteredData.length / itemsPerPage) || 1;
-            
-            // Update pagination buttons
-            document.getElementById('prevBtn').disabled = currentPage === 1;
-            document.getElementById('nextBtn').disabled = currentPage >= Math.ceil(filteredData.length / itemsPerPage);
+            updatePaginationInfo();
+        }
+
+        function updatePaginationInfo() {
+            try {
+                const dataCount = document.getElementById('dataCount');
+                const totalCount = document.getElementById('totalCount');
+                const currentPageEl = document.getElementById('currentPage');
+                const totalPagesEl = document.getElementById('totalPages');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+
+                if (dataCount) dataCount.textContent = filteredData.length;
+                if (totalCount) totalCount.textContent = allData.length;
+                if (currentPageEl) currentPageEl.textContent = currentPage;
+                
+                const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
+                if (totalPagesEl) totalPagesEl.textContent = totalPages;
+                
+                if (prevBtn) prevBtn.disabled = currentPage === 1;
+                if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+            } catch (error) {
+                console.error('Error in updatePaginationInfo:', error);
+            }
         }
 
         function previousPage() {
@@ -2789,527 +2812,685 @@
         }
 
         function nextPage() {
-            if (currentPage < Math.ceil(filteredData.length / itemsPerPage)) {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage < totalPages) {
                 currentPage++;
                 displayData();
             }
         }
 
         function showDetail(id) {
-            const record = allData.find(item => item.id === id);
-            if (!record) return;
-            
-            const modal = document.getElementById('detailModal');
-            const content = document.getElementById('detailContent');
-            
-            content.innerHTML = `
-                <div style="display: grid; gap: 2rem;">
-                    <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">ข้อมูลส่วนบุคคล</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                            <div><strong>ชื่อ-นามสกุล:</strong> ${record.prefix} ${record.firstName} ${record.lastName}</div>
-                            <div><strong>ตำแหน่ง:</strong> ${record.position} (${record.level})</div>
-                            <div><strong>หน่วยงาน:</strong> ${record.department}</div>
-                            <div><strong>งาน:</strong> ${record.work}</div>
-                            <div><strong>กลุ่มงาน:</strong> ${record.workGroup}</div>
-                            <div><strong>วันเกิด:</strong> ${record.birthDate}</div>
-                            <div><strong>วันเกษียณ:</strong> ${record.retirementDate}</div>
-                            <div><strong>เวลาที่เหลือ:</strong> ${record.remainingTime}</div>
+            try {
+                const record = allData.find(item => item.id === id);
+                if (!record) {
+                    showMessage('ไม่พบข้อมูลที่ต้องการ', 'error');
+                    return;
+                }
+                
+                const modal = document.getElementById('detailModal');
+                const content = document.getElementById('detailContent');
+                
+                content.innerHTML = `
+                    <div style="display: grid; gap: 2rem;">
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">ข้อมูลส่วนบุคคล</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                <div><strong>ชื่อ-นามสกุล:</strong> ${record.prefix || ''} ${record.firstName || ''} ${record.lastName || ''}</div>
+                                <div><strong>ตำแหน่ง:</strong> ${record.position || ''} (${record.level || ''})</div>
+                                <div><strong>หน่วยงาน:</strong> ${record.department || ''}</div>
+                                <div><strong>งาน:</strong> ${record.work || ''}</div>
+                                <div><strong>กลุ่มงาน:</strong> ${record.workGroup || ''}</div>
+                                <div><strong>วันเกิด:</strong> ${record.birthDate || ''}</div>
+                                <div><strong>วันเกษียณ:</strong> ${record.retirementDate || ''}</div>
+                                <div><strong>เวลาที่เหลือ:</strong> ${record.remainingTime || ''}</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">การพยาบาลเฉพาะทาง</h4>
+                            <div><strong>สถานะ:</strong> ${record.hasSpecializedCourse || ''}</div>
+                            ${record.specializedCourses && record.specializedCourses.length > 0 ? `
+                                <div style="margin-top: 0.5rem;">
+                                    ${record.specializedCourses.map(course => `
+                                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                            <div><strong>หลักสูตร:</strong> ${course.courseName || ''}</div>
+                                            <div><strong>สถาบัน:</strong> ${course.institution || ''}</div>
+                                            <div><strong>ปีที่จบ:</strong> ${course.graduationYear || ''}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Preceptor</h4>
+                            <div><strong>สถานะ:</strong> ${record.hasPreceptorCourse || ''}</div>
+                            ${record.preceptorCourses && record.preceptorCourses.length > 0 ? `
+                                <div style="margin-top: 0.5rem;">
+                                    ${record.preceptorCourses.map(course => `
+                                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                            <div><strong>ระยะเวลา:</strong> ${course.duration || ''}</div>
+                                            <div><strong>ปีที่จบ:</strong> ${course.graduationYear || ''}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">ปริญญาโท</h4>
+                            <div><strong>สถานะ:</strong> ${record.hasMastersDegree || ''}</div>
+                            ${record.mastersDegrees && record.mastersDegrees.length > 0 ? `
+                                <div style="margin-top: 0.5rem;">
+                                    ${record.mastersDegrees.map(degree => `
+                                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                            <div><strong>สาขา:</strong> ${degree.major || ''}</div>
+                                            <div><strong>สถาบัน:</strong> ${degree.institution || ''}</div>
+                                            <div><strong>ปีที่จบ:</strong> ${degree.graduationYear || ''}</div>
+                                            <div><strong>ประเภท:</strong> ${degree.educationType || ''}</div>
+                                            <div><strong>ทุนการศึกษา:</strong> ${degree.scholarship || ''}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem;">ปริญญาเอก</h4>
+                            <div><strong>สถานะ:</strong> ${record.hasDoctoralDegree || ''}</div>
+                            ${record.doctoralDegrees && record.doctoralDegrees.length > 0 ? `
+                                <div style="margin-top: 0.5rem;">
+                                    ${record.doctoralDegrees.map(degree => `
+                                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                            <div><strong>สาขา:</strong> ${degree.major || ''}</div>
+                                            <div><strong>สถาบัน:</strong> ${degree.institution || ''}</div>
+                                            <div><strong>ปีที่จบ:</strong> ${degree.graduationYear || ''}</div>
+                                            <div><strong>ประเภท:</strong> ${degree.educationType || ''}</div>
+                                            <div><strong>ทุนการศึกษา:</strong> ${degree.scholarship || ''}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
-                    
-                    <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">การพยาบาลเฉพาะทาง</h4>
-                        <div><strong>สถานะ:</strong> ${record.hasSpecializedCourse}</div>
-                        ${record.specializedCourses && record.specializedCourses.length > 0 ? `
-                            <div style="margin-top: 0.5rem;">
-                                ${record.specializedCourses.map(course => `
-                                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                                        <div><strong>หลักสูตร:</strong> ${course.courseName}</div>
-                                        <div><strong>สถาบัน:</strong> ${course.institution}</div>
-                                        <div><strong>ปีที่จบ:</strong> ${course.graduationYear}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Preceptor</h4>
-                        <div><strong>สถานะ:</strong> ${record.hasPreceptorCourse}</div>
-                        ${record.preceptorCourses && record.preceptorCourses.length > 0 ? `
-                            <div style="margin-top: 0.5rem;">
-                                ${record.preceptorCourses.map(course => `
-                                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                                        <div><strong>ระยะเวลา:</strong> ${course.duration}</div>
-                                        <div><strong>ปีที่จบ:</strong> ${course.graduationYear}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">ปริญญาโท</h4>
-                        <div><strong>สถานะ:</strong> ${record.hasMastersDegree}</div>
-                        ${record.mastersDegrees && record.mastersDegrees.length > 0 ? `
-                            <div style="margin-top: 0.5rem;">
-                                ${record.mastersDegrees.map(degree => `
-                                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                                        <div><strong>สาขา:</strong> ${degree.major}</div>
-                                        <div><strong>สถาบัน:</strong> ${degree.institution}</div>
-                                        <div><strong>ปีที่จบ:</strong> ${degree.graduationYear}</div>
-                                        <div><strong>ประเภท:</strong> ${degree.educationType}</div>
-                                        <div><strong>ทุนการศึกษา:</strong> ${degree.scholarship}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <div>
-                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">ปริญญาเอก</h4>
-                        <div><strong>สถานะ:</strong> ${record.hasDoctoralDegree}</div>
-                        ${record.doctoralDegrees && record.doctoralDegrees.length > 0 ? `
-                            <div style="margin-top: 0.5rem;">
-                                ${record.doctoralDegrees.map(degree => `
-                                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
-                                        <div><strong>สาขา:</strong> ${degree.major}</div>
-                                        <div><strong>สถาบัน:</strong> ${degree.institution}</div>
-                                        <div><strong>ปีที่จบ:</strong> ${degree.graduationYear}</div>
-                                        <div><strong>ประเภท:</strong> ${degree.educationType}</div>
-                                        <div><strong>ทุนการศึกษา:</strong> ${degree.scholarship}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-            
-            modal.style.display = 'flex';
+                `;
+                
+                modal.style.display = 'flex';
+            } catch (error) {
+                console.error('Error in showDetail:', error);
+                showMessage('เกิดข้อผิดพลาดในการแสดงรายละเอียด', 'error');
+            }
         }
 
         function closeDetailModal() {
-            document.getElementById('detailModal').style.display = 'none';
+            const modal = document.getElementById('detailModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
 
         function requestEdit(id) {
             editingRecord = id;
-            document.getElementById('editAccessModal').style.display = 'flex';
+            const modal = document.getElementById('editAccessModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
         }
 
         function closeEditAccessModal() {
-            document.getElementById('editAccessModal').style.display = 'none';
+            const modal = document.getElementById('editAccessModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
             editingRecord = null;
+            
+            const accessCode = document.getElementById('accessCode');
+            if (accessCode) {
+                accessCode.value = '';
+            }
         }
 
         async function validateEditAccess() {
-            const accessCode = document.getElementById('accessCode').value;
-            if (!accessCode.trim()) {
-                showMessage('กรุณากรอกเลขที่ใบอนุญาต', 'warning');
-                return;
-            }
-            
             try {
+                const accessCode = document.getElementById('accessCode').value;
+                if (!accessCode.trim()) {
+                    showMessage('กรุณากรอกเลขที่ใบอนุญาต', 'warning');
+                    return;
+                }
+                
                 const result = await callAPI('validateEdit', {
                     recordId: editingRecord,
                     licenseNumber: accessCode
-                });
+                }, true);
                 
-                if (result.success) {
+                if (result && result.success) {
                     closeEditAccessModal();
                     editRecord(editingRecord);
                 } else {
-                    showMessage(result.error || 'เลขที่ใบอนุญาตไม่ถูกต้อง', 'error');
+                    const errorMessage = result ? result.error || 'เลขที่ใบอนุญาตไม่ถูกต้อง' : 'เลขที่ใบอนุญาตไม่ถูกต้อง';
+                    showMessage(errorMessage, 'error');
                 }
             } catch (error) {
+                console.error('Error in validateEditAccess:', error);
                 showMessage('เกิดข้อผิดพลาดในการยืนยันตัวตน', 'error');
             }
         }
 
         function editRecord(id) {
-            // Implementation for edit record
-            showMessage('ฟีเจอร์การแก้ไขยังไม่พร้อมใช้งาน', 'info');
+            showMessage('ฟีเจอร์การแก้ไขยังไม่พร้อมใช้งาน กรุณาติดต่อเจ้าหน้าที่', 'info');
         }
 
         async function deleteRecord(id) {
-            const result = await Swal.fire({
-                title: 'ยืนยันการลบ',
-                text: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#e91e63',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'ลบ',
-                cancelButtonText: 'ยกเลิก'
-            });
-            
-            if (result.isConfirmed) {
-                try {
-                    const deleteResult = await callAPI('delete', { id });
-                    if (deleteResult.success) {
+            try {
+                const result = await Swal.fire({
+                    title: 'ยืนยันการลบ',
+                    text: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e91e63',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'ลบ',
+                    cancelButtonText: 'ยกเลิก'
+                });
+                
+                if (result.isConfirmed) {
+                    const deleteResult = await callAPI('delete', { id }, false);
+                    if (deleteResult && deleteResult.success) {
                         showMessage('ลบข้อมูลสำเร็จ', 'success');
-                        loadViewData();
+                        await loadViewData(); // Reload data
                     } else {
-                        showMessage(deleteResult.error || 'เกิดข้อผิดพลาดในการลบข้อมูล', 'error');
+                        const errorMessage = deleteResult ? deleteResult.error || 'เกิดข้อผิดพลาดในการลบข้อมูล' : 'เกิดข้อผิดพลาดในการลบข้อมูล';
+                        showMessage(errorMessage, 'error');
                     }
-                } catch (error) {
-                    showMessage('เกิดข้อผิดพลาดในการลบข้อมูล', 'error');
                 }
+            } catch (error) {
+                console.error('Error in deleteRecord:', error);
+                showMessage('เกิดข้อผิดพลาดในการลบข้อมูล', 'error');
             }
         }
 
         // Dashboard functions
         async function loadDashboardData() {
-            const year = document.getElementById('dashboardYear').value;
-            
             try {
+                console.log('Loading dashboard data...');
+                const year = document.getElementById('dashboardYear').value;
+                
                 const result = await callAPI('getDashboardData', { retirementYear: year });
-                if (result.success) {
+                if (result && result.success) {
                     updateDashboardStats(result.data);
                     updateCharts(result.data);
-                    updateRetirementList(result.data.retirementList);
+                    updateRetirementList(result.data.retirementList || []);
+                    console.log('Dashboard data loaded for year:', year);
+                } else {
+                    console.error('Failed to load dashboard data:', result ? result.error : 'Unknown error');
+                    showMessage('ไม่สามารถโหลดข้อมูล Dashboard ได้', 'error');
                 }
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
+                showMessage('เกิดข้อผิดพลาดในการโหลด Dashboard', 'error');
             }
         }
 
         function updateDashboardStats(data) {
-            document.getElementById('totalNurses').textContent = data.departmentStats ? Object.values(data.departmentStats).reduce((a, b) => a + b, 0) : 0;
-            document.getElementById('retirementCount').textContent = data.retirementCount || 0;
-            document.getElementById('specializedCount').textContent = data.educationStats?.specialized || 0;
-            document.getElementById('preceptorCount').textContent = data.educationStats?.preceptor || 0;
+            try {
+                const totalNurses = data.departmentStats ? Object.values(data.departmentStats).reduce((a, b) => a + b, 0) : 0;
+                
+                const totalNursesEl = document.getElementById('totalNurses');
+                const retirementCountEl = document.getElementById('retirementCount');
+                const specializedCountEl = document.getElementById('specializedCount');
+                const preceptorCountEl = document.getElementById('preceptorCount');
+
+                if (totalNursesEl) totalNursesEl.textContent = totalNurses;
+                if (retirementCountEl) retirementCountEl.textContent = data.retirementCount || 0;
+                if (specializedCountEl) specializedCountEl.textContent = data.educationStats?.specialized || 0;
+                if (preceptorCountEl) preceptorCountEl.textContent = data.educationStats?.preceptor || 0;
+            } catch (error) {
+                console.error('Error in updateDashboardStats:', error);
+            }
         }
 
         function updateCharts(data) {
-            // Education Chart
-            const educationCtx = document.getElementById('educationChart');
-            if (educationCtx) {
-                new Chart(educationCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['เฉพาะทาง', 'Preceptor', 'ปริญญาโท', 'ปริญญาเอก'],
-                        datasets: [{
-                            data: [
-                                data.educationStats?.specialized || 0,
-                                data.educationStats?.preceptor || 0,
-                                data.educationStats?.masters || 0,
-                                data.educationStats?.doctoral || 0
-                            ],
-                            backgroundColor: ['#e91e63', '#3f51b5', '#ff9800', '#4caf50']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
+            try {
+                // Education Chart
+                const educationCtx = document.getElementById('educationChart');
+                if (educationCtx) {
+                    // Clear previous chart
+                    const existingChart = Chart.getChart(educationCtx);
+                    if (existingChart) {
+                        existingChart.destroy();
+                    }
+                    
+                    new Chart(educationCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['เฉพาะทาง', 'Preceptor', 'ปริญญาโท', 'ปริญญาเอก'],
+                            datasets: [{
+                                data: [
+                                    data.educationStats?.specialized || 0,
+                                    data.educationStats?.preceptor || 0,
+                                    data.educationStats?.masters || 0,
+                                    data.educationStats?.doctoral || 0
+                                ],
+                                backgroundColor: ['#e91e63', '#3f51b5', '#ff9800', '#4caf50'],
+                                borderWidth: 2,
+                                borderColor: '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        usePointStyle: true
+                                    }
+                                }
                             }
                         }
-                    }
-                });
-            }
-            
-            // Retirement Chart
-            const retirementCtx = document.getElementById('retirementChart');
-            if (retirementCtx && data.retirementStats) {
-                const years = Object.keys(data.retirementStats).sort();
-                const counts = years.map(year => data.retirementStats[year]);
+                    });
+                }
                 
-                new Chart(retirementCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: years,
-                        datasets: [{
-                            label: 'จำนวนผู้เกษียณ',
-                            data: counts,
-                            backgroundColor: '#e91e63'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false
+                // Retirement Chart
+                const retirementCtx = document.getElementById('retirementChart');
+                if (retirementCtx && data.retirementStats) {
+                    // Clear previous chart
+                    const existingChart = Chart.getChart(retirementCtx);
+                    if (existingChart) {
+                        existingChart.destroy();
+                    }
+                    
+                    const years = Object.keys(data.retirementStats).sort();
+                    const counts = years.map(year => data.retirementStats[year]);
+                    
+                    new Chart(retirementCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: years,
+                            datasets: [{
+                                label: 'จำนวนผู้เกษียณ',
+                                data: counts,
+                                backgroundColor: '#e91e63',
+                                borderColor: '#ad1457',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
+            } catch (error) {
+                console.error('Error in updateCharts:', error);
             }
         }
 
         function updateRetirementList(retirementList) {
-            const container = document.getElementById('retirementList');
-            
-            if (!retirementList || retirementList.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">ไม่มีผู้เกษียณอายุในปีนี้</p>';
-                return;
-            }
-            
-            container.innerHTML = `
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: var(--primary-light);">
-                                <th style="padding: 0.75rem; text-align: left;">ชื่อ-นามสกุล</th>
-                                <th style="padding: 0.75rem; text-align: left;">ตำแหน่ง</th>
-                                <th style="padding: 0.75rem; text-align: left;">หน่วยงาน</th>
-                                <th style="padding: 0.75rem; text-align: center;">วันเกษียณ</th>
-                                <th style="padding: 0.75rem; text-align: center;">เวลาที่เหลือ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${retirementList.map(person => `
-                                <tr style="border-bottom: 1px solid #f0f0f0;">
-                                    <td style="padding: 0.75rem;">${person.fullName}</td>
-                                    <td style="padding: 0.75rem;">${person.position}</td>
-                                    <td style="padding: 0.75rem;">${person.department}</td>
-                                    <td style="padding: 0.75rem; text-align: center;">${person.retirementDate}</td>
-                                    <td style="padding: 0.75rem; text-align: center;">${person.remainingTime}</td>
+            try {
+                const container = document.getElementById('retirementList');
+                if (!container) return;
+                
+                if (!retirementList || retirementList.length === 0) {
+                    container.innerHTML = '<p class="no-data">ไม่มีผู้เกษียณอายุในปีนี้</p>';
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>ตำแหน่ง</th>
+                                    <th>หน่วยงาน</th>
+                                    <th style="text-align: center;">วันเกษียณ</th>
+                                    <th style="text-align: center;">เวลาที่เหลือ</th>
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
+                            </thead>
+                            <tbody>
+                                ${retirementList.map(person => `
+                                    <tr>
+                                        <td>${person.fullName || ''}</td>
+                                        <td>${person.position || ''}</td>
+                                        <td>${person.department || ''}</td>
+                                        <td style="text-align: center;">${person.retirementDate || ''}</td>
+                                        <td style="text-align: center;">${person.remainingTime || ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error in updateRetirementList:', error);
+            }
         }
 
         // Search functions
         function toggleSearchFields() {
-            const searchType = document.getElementById('searchType').value;
-            const yearGroup = document.getElementById('yearSearchGroup');
-            
-            if (searchType === 'retirement') {
-                yearGroup.style.display = 'block';
-            } else {
-                yearGroup.style.display = 'none';
+            try {
+                const searchType = document.getElementById('searchType').value;
+                const yearGroup = document.getElementById('yearSearchGroup');
+                
+                if (searchType === 'retirement') {
+                    yearGroup.style.display = 'block';
+                } else {
+                    yearGroup.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error in toggleSearchFields:', error);
             }
         }
 
         async function performSearch() {
-            const searchType = document.getElementById('searchType').value;
-            const searchTerm = document.getElementById('searchTerm').value;
-            const searchYear = document.getElementById('searchYear').value;
-            
             try {
+                const searchType = document.getElementById('searchType').value;
+                const searchTerm = document.getElementById('searchTerm').value;
+                const searchYear = document.getElementById('searchYear').value;
+                
+                console.log('Performing search:', { searchType, searchTerm, searchYear });
+                
                 const result = await callAPI('search', {
                     type: searchType,
                     term: searchTerm,
                     year: searchYear
                 });
                 
-                if (result.success) {
-                    displaySearchResults(result.data);
+                if (result && result.success) {
+                    displaySearchResults(result.data || []);
                 } else {
-                    showMessage(result.error || 'เกิดข้อผิดพลาดในการค้นหา', 'error');
+                    const errorMessage = result ? result.error || 'เกิดข้อผิดพลาดในการค้นหา' : 'เกิดข้อผิดพลาดในการค้นหา';
+                    showMessage(errorMessage, 'error');
+                    displaySearchResults([]);
                 }
             } catch (error) {
+                console.error('Error in performSearch:', error);
                 showMessage('เกิดข้อผิดพลาดในการค้นหา', 'error');
+                displaySearchResults([]);
             }
         }
 
         function displaySearchResults(results) {
-            const container = document.getElementById('searchResults');
-            
-            if (!results || results.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">ไม่พบข้อมูลที่ตรงกับคำค้นหา</p>';
-                return;
-            }
-            
-            container.innerHTML = `
-                <div style="margin-bottom: 1rem;">
-                    <strong>ผลการค้นหา: ${results.length} รายการ</strong>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-light);">
-                        <thead style="background: var(--primary-color); color: white;">
-                            <tr>
-                                <th style="padding: 1rem; text-align: left;">ชื่อ-นามสกุล</th>
-                                <th style="padding: 1rem; text-align: left;">ตำแหน่ง</th>
-                                <th style="padding: 1rem; text-align: left;">หน่วยงาน</th>
-                                <th style="padding: 1rem; text-align: center;">การจัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${results.map(item => `
-                                <tr style="border-bottom: 1px solid #f0f0f0;">
-                                    <td style="padding: 1rem;">${item.prefix} ${item.firstName} ${item.lastName}</td>
-                                    <td style="padding: 1rem;">${item.position}</td>
-                                    <td style="padding: 1rem;">${item.department}</td>
-                                    <td style="padding: 1rem; text-align: center;">
-                                        <button class="btn btn-primary" onclick="showDetail('${item.id}')" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
-                                            <i class="fas fa-eye"></i> รายละเอียด
-                                        </button>
-                                    </td>
+            try {
+                const container = document.getElementById('searchResults');
+                if (!container) return;
+                
+                if (!results || results.length === 0) {
+                    container.innerHTML = '<div class="no-data"><i class="fas fa-search"></i>ไม่พบข้อมูลที่ตรงกับคำค้นหา</div>';
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div style="margin-bottom: 1rem;">
+                        <strong>ผลการค้นหา: ${results.length} รายการ</strong>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>ตำแหน่ง</th>
+                                    <th>หน่วยงาน</th>
+                                    <th style="text-align: center;">การจัดการ</th>
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
+                            </thead>
+                            <tbody>
+                                ${results.map(item => `
+                                    <tr>
+                                        <td>${item.prefix || ''} ${item.firstName || ''} ${item.lastName || ''}</td>
+                                        <td>${item.position || ''}</td>
+                                        <td>${item.department || ''}</td>
+                                        <td style="text-align: center;">
+                                            <button class="btn btn-primary" onclick="showDetail('${item.id || ''}')" title="ดูรายละเอียด">
+                                                <i class="fas fa-eye"></i> รายละเอียด
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error in displaySearchResults:', error);
+            }
         }
 
         // Export functions
         async function exportData(format) {
             try {
-                const result = await callAPI('exportData', { format });
-                if (result.success) {
+                console.log('Exporting data as:', format);
+                showLoading(true);
+                
+                const result = await callAPI('exportData', { format }, false);
+                if (result && result.success) {
                     if (result.downloadUrl) {
+                        // สร้าง temporary link สำหรับดาวน์โหลด
                         const link = document.createElement('a');
                         link.href = result.downloadUrl;
-                        link.download = result.fileName;
+                        link.download = result.fileName || `export.${format}`;
+                        link.target = '_blank';
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
+                        
+                        showMessage(`ส่งออกไฟล์ ${format.toUpperCase()} สำเร็จ`, 'success');
+                    } else {
+                        showMessage('ไม่สามารถสร้างลิงก์ดาวน์โหลดได้', 'error');
                     }
-                    showMessage(`ส่งออกไฟล์ ${format.toUpperCase()} สำเร็จ`, 'success');
                 } else {
-                    showMessage(result.error || 'เกิดข้อผิดพลาดในการส่งออกข้อมูล', 'error');
+                    const errorMessage = result ? result.error || 'เกิดข้อผิดพลาดในการส่งออกข้อมูล' : 'เกิดข้อผิดพลาดในการส่งออกข้อมูล';
+                    showMessage(errorMessage, 'error');
                 }
             } catch (error) {
+                console.error('Error in exportData:', error);
                 showMessage('เกิดข้อผิดพลาดในการส่งออกข้อมูล', 'error');
+            } finally {
+                showLoading(false);
             }
         }
 
-        // Load database names
-        async function loadDatabaseNames() {
-            try {
-                const result = await callAPI('getDatabaseNames');
-                if (result.success) {
-                    databaseNames = result.data;
-                }
-            } catch (error) {
-                console.error('Error loading database names:', error);
-            }
-        }
-
-        // Check connection status
-        async function checkConnectionStatus() {
-            try {
-                const result = await callAPI('test');
-                const statusElement = document.getElementById('connectionStatus');
-                
-                if (result.success) {
-                    statusElement.textContent = 'เชื่อมต่อแล้ว';
-                    statusElement.style.color = 'var(--success-color)';
-                } else {
-                    statusElement.textContent = 'ไม่สามารถเชื่อมต่อได้';
-                    statusElement.style.color = 'var(--error-color)';
-                }
-            } catch (error) {
-                const statusElement = document.getElementById('connectionStatus');
-                statusElement.textContent = 'ไม่สามารถเชื่อมต่อได้';
-                statusElement.style.color = 'var(--error-color)';
-            }
+        // Periodic connection check
+        function startPeriodicConnectionCheck() {
+            // ตรวจสอบการเชื่อมต่อทุก 5 นาที
+            setInterval(async () => {
+                console.log('Periodic connection check...');
+                await checkConnectionStatus();
+            }, 5 * 60 * 1000);
         }
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            // Form submission
-            document.getElementById('educationForm').addEventListener('submit', submitForm);
+            console.log('DOM loaded, initializing app...');
             
-            // Birth date change event
-            document.getElementById('birthDate').addEventListener('change', function() {
-                const birthDate = this.value;
-                if (birthDate) {
-                    const retirementDate = calculateRetirementDate(birthDate);
-                    const remainingTime = calculateRemainingTime(retirementDate);
+            try {
+                // Form submission
+                const educationForm = document.getElementById('educationForm');
+                if (educationForm) {
+                    educationForm.addEventListener('submit', submitForm);
+                }
+                
+                // Birth date change event
+                const birthDateInput = document.getElementById('birthDate');
+                if (birthDateInput) {
+                    birthDateInput.addEventListener('change', function() {
+                        const birthDate = this.value;
+                        if (birthDate) {
+                            const retirementDate = calculateRetirementDate(birthDate);
+                            const remainingTime = calculateRemainingTime(retirementDate);
+                            
+                            const retirementDisplay = document.getElementById('retirementDisplay');
+                            const remainingTimeDisplay = document.getElementById('remainingTimeDisplay');
+                            
+                            if (retirementDisplay) retirementDisplay.textContent = retirementDate;
+                            if (remainingTimeDisplay) remainingTimeDisplay.textContent = remainingTime;
+                        } else {
+                            const retirementDisplay = document.getElementById('retirementDisplay');
+                            const remainingTimeDisplay = document.getElementById('remainingTimeDisplay');
+                            
+                            if (retirementDisplay) retirementDisplay.textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
+                            if (remainingTimeDisplay) remainingTimeDisplay.textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
+                        }
+                    });
+                }
+                
+                // Other field change events
+                ['prefix', 'position', 'level'].forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.addEventListener('change', function() {
+                            const otherInput = document.getElementById(fieldId + 'Other');
+                            if (otherInput) {
+                                if (this.value === 'อื่นๆ') {
+                                    otherInput.classList.remove('hidden');
+                                    otherInput.required = true;
+                                } else {
+                                    otherInput.classList.add('hidden');
+                                    otherInput.required = false;
+                                    otherInput.value = '';
+                                }
+                            }
+                        });
+                    }
+                });
+                
+                // Name input events
+                const firstNameInput = document.getElementById('firstName');
+                if (firstNameInput) {
+                    firstNameInput.addEventListener('input', function() {
+                        const value = this.value.toLowerCase();
+                        if (value.length > 1 && databaseNames.length > 0) {
+                            const suggestions = databaseNames.filter(item => 
+                                item.firstName && item.firstName.toLowerCase().includes(value)
+                            );
+                            showNameSuggestions(this, suggestions, 'firstName');
+                        } else {
+                            hideNameSuggestions(this);
+                        }
+                    });
                     
-                    document.getElementById('retirementDisplay').textContent = retirementDate;
-                    document.getElementById('remainingTimeDisplay').textContent = remainingTime;
-                } else {
-                    document.getElementById('retirementDisplay').textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
-                    document.getElementById('remainingTimeDisplay').textContent = 'จะคำนวณอัตโนมัติเมื่อกรอกวันเกิด';
+                    firstNameInput.addEventListener('blur', function() {
+                        hideNameSuggestions(this);
+                    });
                 }
-            });
-            
-            // Other field change events
-            ['prefix', 'position', 'level'].forEach(fieldId => {
-                document.getElementById(fieldId).addEventListener('change', function() {
-                    const otherInput = document.getElementById(fieldId + 'Other');
-                    if (this.value === 'อื่นๆ') {
-                        otherInput.classList.remove('hidden');
-                        otherInput.required = true;
+                
+                const lastNameInput = document.getElementById('lastName');
+                if (lastNameInput) {
+                    lastNameInput.addEventListener('input', function() {
+                        const value = this.value.toLowerCase();
+                        if (value.length > 1 && databaseNames.length > 0) {
+                            const suggestions = databaseNames.filter(item => 
+                                item.lastName && item.lastName.toLowerCase().includes(value)
+                            );
+                            showNameSuggestions(this, suggestions, 'lastName');
+                        } else {
+                            hideNameSuggestions(this);
+                        }
+                    });
+                    
+                    lastNameInput.addEventListener('blur', function() {
+                        hideNameSuggestions(this);
+                    });
+                }
+                
+                // Search input for view tab
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        const searchTerm = this.value.toLowerCase();
+                        filteredData = allData.filter(item => {
+                            const fullName = `${item.firstName || ''} ${item.lastName || ''}`.toLowerCase();
+                            return fullName.includes(searchTerm) || 
+                                   (item.position && item.position.toLowerCase().includes(searchTerm)) ||
+                                   (item.department && item.department.toLowerCase().includes(searchTerm));
+                        });
+                        currentPage = 1;
+                        displayData();
+                    });
+                }
+                
+                // Click outside to hide suggestions
+                document.addEventListener('click', function(event) {
+                    const suggestions = document.querySelectorAll('.name-suggestions');
+                    suggestions.forEach(suggestion => {
+                        if (!suggestion.contains(event.target) && !suggestion.previousElementSibling.contains(event.target)) {
+                            suggestion.style.display = 'none';
+                        }
+                    });
+                });
+                
+                // Click outside modals to close
+                document.addEventListener('click', function(event) {
+                    const modals = document.querySelectorAll('.modal');
+                    modals.forEach(modal => {
+                        if (event.target === modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                });
+                
+                // Set current year for dashboard
+                const currentYear = new Date().getFullYear() + 543;
+                const dashboardYearSelect = document.getElementById('dashboardYear');
+                if (dashboardYearSelect) {
+                    dashboardYearSelect.value = currentYear.toString();
+                }
+                
+                // Initialize delete button visibility
+                updateDeleteButtons('specializedCourseList');
+                updateDeleteButtons('preceptorCourseList');
+                updateDeleteButtons('mastersDegreeList');
+                updateDeleteButtons('doctoralDegreeList');
+                
+                // Load initial data
+                console.log('Starting initial data load...');
+                checkConnectionStatus().then(async (isConnected) => {
+                    if (isConnected) {
+                        await loadDatabaseNames();
+                        startPeriodicConnectionCheck();
+                        console.log('App initialized successfully with connection');
                     } else {
-                        otherInput.classList.add('hidden');
-                        otherInput.required = false;
-                        otherInput.value = '';
+                        console.warn('App initialized but connection failed');
+                        showMessage('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง', 'warning');
                     }
                 });
-            });
-            
-            // Name input events
-            document.getElementById('firstName').addEventListener('input', function() {
-                const value = this.value.toLowerCase();
-                if (value.length > 1) {
-                    const suggestions = databaseNames.filter(item => 
-                        item.firstName && item.firstName.toLowerCase().includes(value)
-                    );
-                    showNameSuggestions(this, suggestions, 'firstName');
-                } else {
-                    hideNameSuggestions(this);
-                }
-            });
-            
-            document.getElementById('firstName').addEventListener('blur', function() {
-                hideNameSuggestions(this);
-            });
-            
-            document.getElementById('lastName').addEventListener('input', function() {
-                const value = this.value.toLowerCase();
-                if (value.length > 1) {
-                    const suggestions = databaseNames.filter(item => 
-                        item.lastName && item.lastName.toLowerCase().includes(value)
-                    );
-                    showNameSuggestions(this, suggestions, 'lastName');
-                } else {
-                    hideNameSuggestions(this);
-                }
-            });
-            
-            document.getElementById('lastName').addEventListener('blur', function() {
-                hideNameSuggestions(this);
-            });
-            
-            // Search input for view tab
-            document.getElementById('searchInput').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                filteredData = allData.filter(item => {
-                    const fullName = `${item.firstName} ${item.lastName}`.toLowerCase();
-                    return fullName.includes(searchTerm) || 
-                           item.position.toLowerCase().includes(searchTerm) ||
-                           item.department.toLowerCase().includes(searchTerm);
-                });
-                currentPage = 1;
-                displayData();
-            });
-            
-            // Click outside to hide suggestions
-            document.addEventListener('click', function(event) {
-                const suggestions = document.querySelectorAll('.name-suggestions');
-                suggestions.forEach(suggestion => {
-                    if (!suggestion.contains(event.target) && !suggestion.previousElementSibling.contains(event.target)) {
-                        suggestion.style.display = 'none';
-                    }
-                });
-            });
-            
-            // Initialize delete button visibility
-            updateDeleteButtons('specializedCourseList');
-            updateDeleteButtons('preceptorCourseList');
-            updateDeleteButtons('mastersDegreeList');
-            updateDeleteButtons('doctoralDegreeList');
-            
-            // Set current year for dashboard
-            const currentYear = new Date().getFullYear() + 543;
-            document.getElementById('dashboardYear').value = currentYear.toString();
-            
-            // Load initial data
-            loadDatabaseNames();
-            checkConnectionStatus();
+                
+                console.log('App initialized successfully with JSONP support');
+                
+            } catch (error) {
+                console.error('Error during app initialization:', error);
+                showMessage('เกิดข้อผิดพลาดในการเริ่มต้นระบบ', 'error');
+            }
         });
+
+        // Error handling for unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            // Don't show error to user for every unhandled rejection
+        });
+
+        // Error handling for JavaScript errors
+        window.addEventListener('error', function(event) {
+            console.error('JavaScript error:', event.error);
+            // Don't show error to user for every JavaScript error
+        });
+
+        console.log('Nursing Education System loaded successfully with enhanced JSONP support');
     </script>
 </body>
 </html>
