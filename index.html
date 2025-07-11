@@ -2485,35 +2485,6 @@
                 console.error('Error in toggleScholarshipOther:', error);
             }
         }
-
-function toggleScholarshipOther(selectElement) {
-    try {
-        // ค้นหาช่องกรอกเพิ่มเติมที่อยู่ในกลุ่มเดียวกับ dropdown
-        const otherInput = selectElement.parentNode.querySelector('input[name*="ScholarshipOther"]');
-        
-        if (otherInput) {
-            if (selectElement.value === 'อื่นๆ') {
-                // แสดงช่องกรอกเพิ่มเติม
-                otherInput.classList.remove('hidden');
-                otherInput.required = true; // ทำให้เป็นฟิลด์บังคับ
-                otherInput.focus(); // โฟกัสไปที่ช่องกรอกทันที
-                
-                console.log('✅ แสดงช่องกรอกทุนการศึกษาอื่นๆ');
-            } else {
-                // ซ่อนช่องกรอกเพิ่มเติม
-                otherInput.classList.add('hidden');
-                otherInput.required = false; // ยกเลิกการเป็นฟิลด์บังคับ
-                otherInput.value = ''; // ล้างข้อมูลในช่องกรอก
-                
-                console.log('ℹ️ ซ่อนช่องกรอกทุนการศึกษาอื่นๆ');
-            }
-        } else {
-            console.warn('⚠️ ไม่พบช่องกรอกทุนการศึกษาอื่นๆ ที่เกี่ยวข้อง');
-        }
-    } catch (error) {
-        console.error('❌ Error in toggleScholarshipOther:', error);
-    }
-}
       
         // Name suggestion functions
         function showNameSuggestions(inputElement, suggestions, field) {
