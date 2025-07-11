@@ -1823,47 +1823,40 @@
             }
         }
 
-        // ฟังก์ชันสำหรับตรวจสอบและเริ่มต้นช่องกรอกทุนการศึกษา
-        function initializeScholarshipFields() {
-            try {
-                console.log('🔍 กำลังตรวจสอบและเริ่มต้นช่องกรอกทุนการศึกษา...');
-                
-                // ค้นหา dropdown ทุนการศึกษาทั้งหมดที่มี onchange="toggleScholarshipOther(this)"
-                const scholarshipSelects = document.querySelectorAll('select[name*="Scholarship"]:not([name*="Other"])');
-                
-                scholarshipSelects.forEach((select, index) => {
-                    console.log(`🔍 ตรวจสอบ scholarship dropdown ที่ ${index + 1}: ${select.name}`);
-                    
-                    // ตรวจสอบว่ามี onchange event หรือไม่
-                    if (!select.onchange && select.getAttribute('onchange')) {
-                        console.log(`⚠️ พบ onchange attribute แต่ไม่มีฟังก์ชัน, กำลังแก้ไข...`);
-                        select.onchange = function() {
-                            toggleScholarshipOther(this);
-                        };
-                    }
-                    
-                    // ตรวจสอบโครงสร้าง HTML ที่ถูกต้อง
-                    const container = select.parentNode;
-                    const additionalContainer = container.querySelector('.scholarship-additional-input');
-                    
-                    if (!additionalContainer) {
-                        console.warn(`⚠️ ไม่พบโครงสร้าง .scholarship-additional-input สำหรับ ${select.name}`);
-                    } else {
-                        console.log(`✅ พบโครงสร้างที่ถูกต้องสำหรับ ${select.name}`);
-                        
-                        // ตรวจสอบและตั้งค่าเริ่มต้น
-                        if (select.value === 'อื่นๆ') {
-                            toggleScholarshipOther(select);
-                        }
-                    }
-                });
-                
-                console.log('✅ การตรวจสอบ scholarship fields เสร็จสิ้น');
-            } catch (error) {
-                console.error('❌ Error in initializeScholarshipFields:', error);
+       /**
+ * ฟังก์ชันสำหรับตรวจสอบและแก้ไขช่องกรอกทุนการศึกษาที่มีปัญหา
+ * เรียกใช้ฟังก์ชันนี้เมื่อโหลดหน้าเสร็จเพื่อตรวจสอบระบบ
+ */
+function initializeScholarshipFields() {
+    try {
+        // ค้นหา dropdown ทุนการศึกษาทั้งหมด
+        const scholarshipSelects = document.querySelectorAll('select[name*="Scholarship"]:not([name*="Other"])');
+        
+        scholarshipSelects.forEach((select, index) => {
+            console.log(`🔍 ตรวจสอบ scholarship dropdown ที่ ${index + 1}`);
+            
+            // ตรวจสอบว่ามี onchange event หรือไม่
+            if (!select.onchange) {
+                console.log(`⚠️ ไม่พบ onchange event สำหรับ dropdown ที่ ${index + 1}, กำลังเพิ่ม...`);
+                select.onchange = function() {
+                    toggleScholarshipOther(this);
+                };
             }
-        }
-
+            
+            // ตรวจสอบช่องกรอกเพิ่มเติมที่เกี่ยวข้อง
+            const otherInput = select.parentNode.querySelector('input[name*="ScholarshipOther"]');
+            if (!otherInput) {
+                console.warn(`⚠️ ไม่พบช่องกรอกเพิ่มเติมสำหรับ dropdown ที่ ${index + 1}`);
+            } else {
+                console.log(`✅ พบช่องกรอกเพิ่มเติมสำหรับ dropdown ที่ ${index + 1}`);
+            }
+        });
+        
+        console.log('✅ การตรวจสอบ scholarship fields เสร็จสิ้น');
+    } catch (error) {
+        console.error('❌ Error in initializeScholarshipFields:', error);
+    }
+}
         // JSONP Implementation - วิธีหลักในการเลี่ยง CORS
         function createJSONPRequest(url, params = {}, timeout = 30000) {
             return new Promise((resolve, reject) => {
@@ -2002,38 +1995,4 @@
                         connectionAttempts = 0;
                         return result;
                     }
-
-                /**
- * ฟังก์ชันสำหรับจัดการการแสดง/ซ่อนช่องกรอกทุนการศึกษาอื่นๆ
- * นี่คือฟังก์ชันที่ขาดหายไปในระบบเดิม
- * 
- * @param {HTMLSelectElement} selectElement - Element ของ dropdown ที่เลือก
- */
-function toggleScholarshipOther(selectElement) {
-    try {
-        // ค้นหาช่องกรอกเพิ่มเติมที่อยู่ในกลุ่มเดียวกับ dropdown
-        const otherInput = selectElement.parentNode.querySelector('input[name*="ScholarshipOther"]');
-        
-        if (otherInput) {
-            if (selectElement.value === 'อื่นๆ') {
-                // แสดงช่องกรอกเพิ่มเติม
-                otherInput.classList.remove('hidden');
-                otherInput.required = true; // ทำให้เป็นฟิลด์บังคับ
-                otherInput.focus(); // โฟกัสไปที่ช่องกรอกทันที
-                
-                console.log('✅ แสดงช่องกรอกทุนการศึกษาอื่นๆ');
-            } else {
-                // ซ่อนช่องกรอกเพิ่มเติม
-                otherInput.classList.add('hidden');
-                otherInput.required = false; // ยกเลิกการเป็นฟิลด์บังคับ
-                otherInput.value = ''; // ล้างข้อมูลในช่องกรอก
-                
-                console.log('ℹ️ ซ่อนช่องกรอกทุนการศึกษาอื่นๆ');
-            }
-        } else {
-            console.warn('⚠️ ไม่พบช่องกรอกทุนการศึกษาอื่นๆ ที่เกี่ยวข้อง');
-        }
-    } catch (error) {
-        console.error('❌ Error in toggleScholarshipOther:', error);
-    }
-}
+document.addEventListener('DOMContentLoaded', function() { ... })
