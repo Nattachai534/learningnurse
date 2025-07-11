@@ -1352,16 +1352,24 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">ทุนการศึกษา</label>
-                                            <div class="input-container">
-                                                <select class="form-select" name="mastersScholarship[]">
-                                                    <option value="">เลือกทุนการศึกษา</option>
-                                                    <option value="ทุนกรมการแพทย์">ทุนกรมการแพทย์</option>
-                                                    <option value="ทุนรพ.ราชวิถี">ทุนรพ.ราชวิถี</option>
-                                                    <option value="ทุนส่วนตัว">ทุนส่วนตัว</option>
-                                                    <option value="อื่นๆ">อื่นๆ (กรอกเพิ่มเติม)</option>
-                                                </select>
-                                                <input class="form-input mt-1 hidden" name="mastersScholarshipOther" id="mastersScholarshipOther" placeholder="ระบุทุนอื่นๆ">
+                                            <label for="scholarship">💰 ทุนการศึกษา:</label>
+                                            <select id="scholarship" name="scholarship" onchange="handleScholarshipChange(this.value)">
+                                                <option value="">-- เลือกประเภททุนการศึกษา --</option>
+                                                <option value="ทุนรัฐบาล">ทุนรัฐบาล</option>
+                                                <option value="ทุนเอกชน">ทุนเอกชน</option>
+                                                <option value="ทุนสถาบันการศึกษา">ทุนสถาบันการศึกษา</option>
+                                                <option value="เงินส่วนตัว">เงินส่วนตัว</option>
+                                                <option value="other">อื่นๆ (กรอกเพิ่มเติม)</option>
+                                            </select>
+                
+                                            <!-- ช่องกรอกเพิ่มเติมที่จะแสดงเมื่อเลือก "อื่นๆ" -->
+                                            <div id="otherScholarshipContainer" class="additional-input">
+                                                <input 
+                                                    type="text" 
+                                                    id="otherScholarship" 
+                                                    name="otherScholarship" 
+                                                    placeholder="กรุณาระบุประเภททุนการศึกษาอื่นๆ..."
+                                                >
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-danger btn-icon hidden delete-btn" onclick="removeMastersDegree(this)" title="ลบสาขา">
